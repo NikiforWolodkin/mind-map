@@ -14,6 +14,13 @@ export default function Root() {
     x: parseInt(window.innerWidth / 2 - 130),
     y: parseInt(window.innerHeight / 2 - 150),
     focus: true,
+    style: {
+      fontFamily: "'Montserrat', sans-serif",
+      fontWeight: "500",
+      fontStyle: "regular",
+      background: "theme",
+      fill: "fill",
+    },
   }]);
   const handleTextChange = (eText, id) => {
     tabs.forEach((element, index) => {
@@ -25,6 +32,7 @@ export default function Root() {
           x: element.x,
           y: element.y,
           focus: false,
+          style: element.style,
         };
         setTabs(() => tabsUpdated);
         update(prevUpdater => !prevUpdater);
@@ -60,6 +68,13 @@ export default function Root() {
       x: parseInt((window.innerWidth / 2) - 130),
       y: parseInt((window.innerHeight / 2) - 60),
       focus: true,
+      style: {
+        fontFamily: "'Montserrat', sans-serif",
+        fontWeight: "500",
+        fontStyle: "normal",
+        background: "theme",
+        fill: "noFill",
+      },
     }]);
     setTabFocus(id);
   }
@@ -74,6 +89,13 @@ export default function Root() {
         x: xNew,
         y: yNew,
         focus: true,
+        style: {
+          fontFamily: "'Montserrat', sans-serif",
+          fontWeight: "500",
+          fontStyle: "normal",
+          background: "theme",
+          fill: "noFill",
+        },
       }
     ]);
     setLines([...lines, {
@@ -115,7 +137,7 @@ export default function Root() {
     setLines(() => linesUpdated);
     update(prevUpdater => !prevUpdater);
   }
-  const [theme, setTheme] = useState("black");
+  const [theme, setTheme] = useState("gradBlue");
   const [tabFocus, setTabFocus] = useState("none");
   const removeTabFocus = () => setTabFocus("none");
   const removeTab = (id) => {
@@ -126,6 +148,16 @@ export default function Root() {
       (element.idFirst !== id) && (element.idSecond !== id)
     ));
     removeTabFocus();
+  }
+  const changeStyle = (id, prop, value) => {
+    let tabsUpdated = tabs;
+    tabsUpdated.forEach((element, index) => {
+      if (element.id === id) {
+        element.style[prop] = value;
+      }
+    });
+    setTabs(tabsUpdated);
+    update(prevUpdater => !prevUpdater);
   }
 
   return (
@@ -158,6 +190,7 @@ export default function Root() {
         theme={theme}
         tabFocus={tabFocus}
         removeTab={removeTab}
+        changeStyle={changeStyle}
       />
 
       {lines.map(element => (
@@ -186,6 +219,7 @@ export default function Root() {
           theme={theme}
           tabFocus={tabFocus}
           setTabFocus={setTabFocus}
+          style={element.style}
         />
       ))}
     </div>

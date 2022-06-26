@@ -93,7 +93,7 @@ function Search(props) {
         />
         <div className="searchResults" onMouseLeave={() => setHover(-1)}>
           {text === '' ? null : (
-            results.length === 0 ? <div>Нет совпадений</div> : (
+            results.length === 0 ? <div style={{ cursor: "default" }}>Нет совпадений</div> : (
               results.map((element, index) => {
               return (<div 
                 key={element.text + index}

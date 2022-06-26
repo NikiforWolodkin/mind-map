@@ -34,8 +34,30 @@ const Tab = React.memo(function Tab(props) {
             style = styleBlack;
             break;
     }
+    let tabStyle = {
+      fontFamily: props.style.fontFamily,
+      fontWeight: props.style.fontWeight,
+      fontStyle: props.style.fontStyle,
+      background: "black",
+    };
+    if (props.style.background === "theme") {
+      tabStyle.background = style.background;
+    }
+    else {
+      tabStyle.background = props.style.background;
+    }
     if (props.tabFocus === props.id) {
-        style = { background: "lightblue" };
+      tabStyle.background = "lightblue";
+    }
+    let inputStyle = {};
+    if (props.style.fill === "fill") {
+      inputStyle = {
+        background: tabStyle.background,
+        color: "white",
+      }
+      if (tabStyle.background === "white") {
+        inputStyle.color = "black";
+      }
     }
 
     const inputRef = useRef(null);
@@ -88,13 +110,14 @@ const Tab = React.memo(function Tab(props) {
           >
             +
           </button>
-          <div className="tab" style={style}>
+          <div className="tab" style={tabStyle}>
             <input
               type="text"
               value={props.text}
               ref={inputRef}
               onChange={(e) => props.handleTextChange(e.target.value, props.id)}
               onClick={() => props.setTabFocus(props.id)}
+              style={inputStyle}
             />
           </div>
           <button
