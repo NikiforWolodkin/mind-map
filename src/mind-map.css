@@ -24,6 +24,25 @@
     z-index: 999;
 }
 
+.clearButton {
+    font-family: inherit;
+    font-size: x-large;
+    width: 48px;
+    height: 48px;
+    border: none;
+    border-radius: 100%;
+    color: white;
+    background-color: #FF9F29;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    line-height: 54px;
+    cursor: pointer;
+    position: fixed;
+    top: 10px;
+    left: 215px;
+    z-index: 999;
+}
+
 .toolBar {
     font-family: inherit;
     font-size: x-large;
@@ -90,6 +109,17 @@
     padding: 8px 0;
     margin: 10px 0 0 10px;
     box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.setting {
+    width: 82.5px;
+    height: 40px;
+    margin: 0 0 10px 10px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+    line-height: 48px;
     border-radius: 8px;
     text-align: center;
     cursor: pointer;
@@ -222,8 +252,28 @@
     border-radius: 4px;
 }
 
-.tab input:focus{
+.tab textarea {
+    width: 204px;
+    height: 186px;
+    font-family: inherit;
+    font-weight: inherit;
+    font-style: inherit;
+    text-align: center;
+    border: none;
+    border-radius: 4px;
+    resize: none;
+}
+
+.tab input:focus, .tab textarea:focus{
     outline: none;
+}
+
+.connector {
+    width: 28px;
+    height: 28px;
+    text-align: center;
+    font-size: x-large;
+    line-height: 36px;
 }
 
 .tabContainer button {

@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
 import { BsBrush } from 'react-icons/bs';
 import { AiOutlineSetting } from 'react-icons/ai';
-import { MdColorLens, MdDeleteOutline } from 'react-icons/md';
+import { MdColorLens, MdCheckBoxOutlineBlank } from 'react-icons/md';
+import { BiCircle, BiCheckbox } from 'react-icons/bi';
+import { VscCircleOutline } from 'react-icons/vsc';
+import { CgClose } from 'react-icons/cg';
 
 const styleBlack = { color: "lightblue" };
 const styleGreen = { color: "#3EC70B" };
@@ -102,7 +105,7 @@ function Customization(props) {
         <div className="customizationFont" style={{ fontWeight: "bold" }}
         onClick={() => {
             props.changeStyle(props.tabFocus, "fontFamily", "'Montserrat', sans-serif");
-            props.changeStyle(props.tabFocus, "fontWeight", "bolder");
+            props.changeStyle(props.tabFocus, "fontWeight", "800");
             props.changeStyle(props.tabFocus, "fontStyle", "normal");
         }}
         >Aa</div>
@@ -172,6 +175,29 @@ function Customization(props) {
             <div className="noFill">
                 Aa
             </div>
+        </div>
+        </>
+    );
+}
+
+function Settings(props) {
+    return (
+        <>
+        <div className="themeHeader">Настройки</div>
+        <div className="setting"
+        onClick={() => props.changeType(props.tabFocus, "connector")}
+        >
+            <VscCircleOutline />
+        </div>
+        <div className="setting"
+        onClick={() => props.changeType(props.tabFocus, "input")}
+        >
+            <BiCheckbox />
+        </div>
+        <div className="setting"
+        onClick={() => props.changeType(props.tabFocus, "textarea")}
+        >
+            <MdCheckBoxOutlineBlank />
         </div>
         </>
     );
@@ -258,7 +284,7 @@ function ToolBar(props) {
                 }}
                 style={props.tabFocus === "none" ? styleDisabled : deleteStyle}
             >
-                <MdDeleteOutline />
+                <CgClose />
             </div>
             <div
                 onClick={() => chooseTool("theme")}
@@ -275,6 +301,9 @@ function ToolBar(props) {
             }
             {(tool === "customization" && props.tabFocus !== "none") && 
                 <Customization changeStyle={props.changeStyle} tabFocus={props.tabFocus} />
+            }
+            {(tool === "settings" && props.tabFocus !== "none") && 
+                <Settings changeType={props.changeType} tabFocus={props.tabFocus} />
             }
         </div>
         </>

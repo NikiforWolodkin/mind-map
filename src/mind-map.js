@@ -1,14 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Line from './WorkspaceComponents/line';
 import Search from './UIComponents/search';
 import Tab from './WorkspaceComponents/tab';
 import AddButton from "./UIComponents/addButton";
 import ToolBar from "./UIComponents/toolBar";
 import "./mind-map.css";
+import ClearButton from "./UIComponents/clearButton";
 
 export default function Root() {
   const [updater, update] = useState(true);
-  const [tabs, setTabs] = useState([{
+  const [tabs, setTabs] = useState(
+    JSON.parse(localStorage.getItem('tabs')) || [{
     id: "id" + Math.random().toString(16).slice(2),
     text: "Новая диаграмма",
     x: parseInt(window.innerWidth / 2 - 130),
@@ -21,6 +23,7 @@ export default function Root() {
       background: "theme",
       fill: "fill",
     },
+    type: "input",
   }]);
   const handleTextChange = (eText, id) => {
     tabs.forEach((element, index) => {
@@ -33,6 +36,7 @@ export default function Root() {
           y: element.y,
           focus: false,
           style: element.style,
+          type: element.type,
         };
         setTabs(() => tabsUpdated);
         update(prevUpdater => !prevUpdater);
@@ -58,7 +62,7 @@ export default function Root() {
     setTabs(updatedTabs);
     update(prevUpdater => !prevUpdater);
   };
-  const [lines, setLines] = useState([]);
+  const [lines, setLines] = useState(JSON.parse(localStorage.getItem('lines')) || []);
   const addRootTab = () => {
     const id = "id" + Math.random().toString(16).slice(2);
     removeFocus();
@@ -75,6 +79,7 @@ export default function Root() {
         background: "theme",
         fill: "noFill",
       },
+      type: "input",
     }]);
     setTabFocus(id);
   }
@@ -96,6 +101,7 @@ export default function Root() {
           background: "theme",
           fill: "noFill",
         },
+        type: "input",
       }
     ]);
     setLines([...lines, {
@@ -135,10 +141,11 @@ export default function Root() {
       }
     })
     setLines(() => linesUpdated);
+    localStorage.setItem('tabs', JSON.stringify(tabs));
     update(prevUpdater => !prevUpdater);
   }
-  const [theme, setTheme] = useState("gradBlue");
-  const [tabFocus, setTabFocus] = useState("none");
+  const [theme, setTheme] = useState(JSON.parse(localStorage.getItem('theme')) || "gradBlue");
+  const [tabFocus, setTabFocus] = useState(JSON.parse(localStorage.getItem('tabFocus')) || "none");
   const removeTabFocus = () => setTabFocus("none");
   const removeTab = (id) => {
     setTabs(tabs.filter(element =>
@@ -148,6 +155,7 @@ export default function Root() {
       (element.idFirst !== id) && (element.idSecond !== id)
     ));
     removeTabFocus();
+    localStorage.removeItem(id);
   }
   const changeStyle = (id, prop, value) => {
     let tabsUpdated = tabs;
@@ -159,6 +167,33 @@ export default function Root() {
     setTabs(tabsUpdated);
     update(prevUpdater => !prevUpdater);
   }
+  const changeType = (id, type) => {
+    let tabsUpdated = tabs;
+    tabsUpdated.forEach((element, index) => {
+      if (element.id === id) {
+        element.type = type;
+      }
+    });
+    setTabs(tabsUpdated);
+    update(prevUpdater => !prevUpdater);
+  }
+  const clearTabs = () => {
+    setTabs([]);
+    setLines([]);
+    update(prevUpdater => !prevUpdater);
+    localStorage.clear();
+    setTheme("gradBlue");
+  }
+
+  useEffect(() => {
+    localStorage.setItem('tabs', JSON.stringify(tabs));
+    localStorage.setItem('lines', JSON.stringify(lines));
+    localStorage.setItem('theme', JSON.stringify(theme));
+    localStorage.setItem('tabFocus', JSON.stringify(tabFocus));
+    if (tabs.length === 0) {
+      localStorage.clear();
+    }
+  }, [tabs, lines, theme, tabFocus, updater]);
 
   return (
     <>
@@ -171,8 +206,11 @@ export default function Root() {
       }}
       onClick={() => removeTabFocus()}
     ></div>
-    <div className="root">
-
+    <>
+      <ClearButton
+        theme={theme}
+        clearTabs={clearTabs}
+      />
       
       <AddButton
         addRootTab={addRootTab}
@@ -191,6 +229,7 @@ export default function Root() {
         tabFocus={tabFocus}
         removeTab={removeTab}
         changeStyle={changeStyle}
+        changeType={changeType}
       />
 
       {lines.map(element => (
@@ -220,9 +259,10 @@ export default function Root() {
           tabFocus={tabFocus}
           setTabFocus={setTabFocus}
           style={element.style}
+          type={element.type}
         />
       ))}
-    </div>
+    </>
     </>
   );
 }

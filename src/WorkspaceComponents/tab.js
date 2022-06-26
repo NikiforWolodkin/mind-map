@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { animated } from "react-spring";
 import { useDrag } from "@use-gesture/react";
+import { VscCircleFilled } from 'react-icons/vsc';
 
 const styleBlack = { background: "black" };
 const styleGreen = { background: "#3EC70B" };
@@ -39,6 +40,7 @@ const Tab = React.memo(function Tab(props) {
       fontWeight: props.style.fontWeight,
       fontStyle: props.style.fontStyle,
       background: "black",
+      height: "38px",
     };
     if (props.style.background === "theme") {
       tabStyle.background = style.background;
@@ -48,6 +50,9 @@ const Tab = React.memo(function Tab(props) {
     }
     if (props.tabFocus === props.id) {
       tabStyle.background = "lightblue";
+    }
+    if (props.type === "textarea") {
+      tabStyle.height = "200px";
     }
     let inputStyle = {};
     if (props.style.fill === "fill") {
@@ -63,7 +68,8 @@ const Tab = React.memo(function Tab(props) {
     const inputRef = useRef(null);
     const [hover, setHover] = useState({ display: "none" });
     const initialPosition = { x: props.x, y: props.y };
-    const [position, setPosition] = useState({
+    const [position, setPosition] = useState(
+      JSON.parse(localStorage.getItem(props.id)) || {
       x: initialPosition.x,
       y: initialPosition.y,
     });
@@ -83,6 +89,10 @@ const Tab = React.memo(function Tab(props) {
         props.removeFocus();
       }
     });
+
+    useEffect(() => {
+      localStorage.setItem(props.id, JSON.stringify(position));
+    }, [position]);
   
     return (
       <animated.div
@@ -95,7 +105,11 @@ const Tab = React.memo(function Tab(props) {
         onMouseEnter={() => setHover({ display: "block" })}
         onMouseLeave={() => setHover({ display: "none" })}
       >
-        <div className="tabContainer">
+        <div className="tabContainer"
+        style={props.type === "textarea" ? {
+          height: "240px",
+        } : {}}
+        >
           <div className="longRow">
             <button
               style={hover}
@@ -110,16 +124,38 @@ const Tab = React.memo(function Tab(props) {
           >
             +
           </button>
-          <div className="tab" style={tabStyle}>
-            <input
-              type="text"
-              value={props.text}
-              ref={inputRef}
-              onChange={(e) => props.handleTextChange(e.target.value, props.id)}
-              onClick={() => props.setTabFocus(props.id)}
-              style={inputStyle}
-            />
+          {props.type === "connector" &&
+          <div className="connector"
+            style={
+              (props.theme !== "gradRed" && props.theme !== "gradBlue") ? { color: tabStyle.background } :
+              (props.theme === "gradRed" ? { color: "red" } : { color: "darkblue" })
+            }
+          >
+            <VscCircleFilled />
           </div>
+          }
+          {props.type !== "connector" &&
+          <div className="tab" style={tabStyle}>
+            {props.type === "input" &&
+              <input
+                type="text"
+                value={props.text}
+                ref={inputRef}
+                onChange={(e) => props.handleTextChange(e.target.value, props.id)}
+                onClick={() => props.setTabFocus(props.id)}
+                style={inputStyle}
+              />
+            }
+            {props.type === "textarea" &&
+              <textarea
+                value={props.text}
+                ref={inputRef}
+                onChange={(e) => props.handleTextChange(e.target.value, props.id)}
+                onClick={() => props.setTabFocus(props.id)}
+                style={inputStyle}
+              />
+            }
+          </div>}
           <button
             style={hover}
             onClick={() => props.addTab("", position.x, position.y, position.x + 300, position.y, props.id)}
