@@ -1,268 +1,142 @@
-import { useState, useEffect } from "react";
-import Line from './WorkspaceComponents/line';
-import Tab from './WorkspaceComponents/tab';
-import Search from './UIComponents/search';
-import AddButton from "./UIComponents/addButton";
-import ClearButton from "./UIComponents/clearButton";
-import ToolBar from "./UIComponents/toolBar";
-import "./mind-map.css";
+import React, { useState, useRef, useEffect } from "react";
+import { animated } from "react-spring";
+import { useDrag } from "@use-gesture/react";
+import { VscCircleFilled } from 'react-icons/vsc';
+import styles from '../styles'
 
-export default function Root() {
-  const [updater, update] = useState(true);
-  const [tabs, setTabs] = useState(
-    JSON.parse(localStorage.getItem('tabs')) || [{
-    id: "id" + Math.random().toString(16).slice(2),
-    text: "Новая диаграмма",
-    x: parseInt(window.innerWidth / 2 - 130),
-    y: parseInt(window.innerHeight / 2 - 150),
-    focus: true,
-    style: {
-      fontFamily: "'Montserrat', sans-serif",
-      fontWeight: "500",
-      fontStyle: "regular",
-      background: "theme",
-      fill: "fill",
-    },
-    type: "input",
-  }]);
-  const handleTextChange = (eText, id) => {
-    tabs.forEach((element, index) => {
-      if (element.id === id) {
-        let tabsUpdated = tabs;
-        tabsUpdated[index] = {
-          id: element.id,
-          text: eText,
-          x: element.x,
-          y: element.y,
-          focus: false,
-          style: element.style,
-          type: element.type,
-        };
-        setTabs(() => tabsUpdated);
-        update(prevUpdater => !prevUpdater);
-      }
-    })
-  };
-  const setFocus = (id) => {
-    let updatedTabs = tabs;
-    updatedTabs.forEach(element => {
-      if (element.id === id) {
-        element.focus = true;
-      }
+const Tab = React.memo(function Tab(props) {
+    let style = { background: styles.find(element =>
+        element.name === props.theme
+    ).background };
+    let tabStyle = {
+        fontFamily: props.style.fontFamily,
+        fontWeight: props.style.fontWeight,
+        fontStyle: props.style.fontStyle,
+        background: (
+            props.tabFocus === props.id ? "lightblue" :
+            (props.style.background === "theme" ? style.background : props.style.background)
+        ),
+        height: props.type === "textarea" ? "200px" : "38px",
+    };
+    let inputStyle = {
+        background: props.style.fill === "fill" ? "none" : "white",
+        color: (
+            props.style.fill === "fill" && tabStyle.background !== "white" ?
+            "white" : "black"
+        ),
+    };
+
+    const inputRef = useRef(null);
+    const initialPosition = { x: props.x, y: props.y };
+    const [hover, setHover] = useState({ display: "none" });
+    const [position, setPosition] = useState(
+        JSON.parse(localStorage.getItem(props.id)) || {
+        x: initialPosition.x,
+        y: initialPosition.y,
     });
-    setTabs(updatedTabs);
-    setTabFocus(id);
-    update(prevUpdater => !prevUpdater);
-  };
-  const removeFocus = () => {
-    let updatedTabs = tabs;
-    updatedTabs.forEach(element => {
-      element.focus = false;
-    });
-    setTabs(updatedTabs);
-    update(prevUpdater => !prevUpdater);
-  };
-  const [lines, setLines] = useState(JSON.parse(localStorage.getItem('lines')) || []);
-  const addRootTab = () => {
-    const id = "id" + Math.random().toString(16).slice(2);
-    removeFocus();
-    setTabs(() => [...tabs, {
-      id: id,
-      text: '',
-      x: parseInt((window.innerWidth / 2) - 130),
-      y: parseInt((window.innerHeight / 2) - 60),
-      focus: true,
-      style: {
-        fontFamily: "'Montserrat', sans-serif",
-        fontWeight: "500",
-        fontStyle: "normal",
-        background: "theme",
-        fill: "noFill",
-      },
-      type: "input",
-    }]);
-    setTabFocus(id);
-  }
-  const addTab = (text, x, y, xNew, yNew, idExisting) => {
-    const idNew = "id" + Math.random().toString(16).slice(2);
-    removeFocus();
-    setTabs(() => [
-      ...tabs,
-      {
-        id: idNew,
-        text: text,
-        x: xNew,
-        y: yNew,
-        focus: true,
-        style: {
-          fontFamily: "'Montserrat', sans-serif",
-          fontWeight: "500",
-          fontStyle: "normal",
-          background: "theme",
-          fill: "noFill",
-        },
-        type: "input",
-      }
-    ]);
-    setLines([...lines, {
-      idFirst: idExisting,
-      xFirst: x,
-      yFirst: y,
-      idSecond: idNew,
-      xSecond: xNew,
-      ySecond: yNew,
-    }]);
-    setTabFocus(idNew);
-  };
-  const updateLines = (id, x, y) => {
-    let linesUpdated = lines;
-    lines.forEach((element, index) => {
-      if (element.idFirst === id || element.idSecond === id) {
-        if (element.idFirst === id) {
-          linesUpdated[index] = {
-            idFirst: element.idFirst,
-            xFirst: x,
-            yFirst: y,
-            idSecond: element.idSecond,
-            xSecond: element.xSecond,
-            ySecond: element.ySecond,
-          };
+    const bindPosition = useDrag((params) => {
+        setPosition({
+          x: initialPosition.x + params.offset[0],
+          y: initialPosition.y + params.offset[1],
+        });
+        props.updateLines(props.id, initialPosition.x + params.offset[0], initialPosition.y + params.offset[1]);
+        if (props.tabFocus !== props.id) {
+            props.setTabFocus(props.id);
         }
-        else {
-          linesUpdated[index] = {
-            idFirst: element.idFirst,
-            xFirst: element.xFirst,
-            yFirst: element.yFirst,
-            idSecond: element.idSecond,
-            xSecond: x,
-            ySecond: y,
-          };
+    });
+
+    useEffect(() => {
+        if (props.focus === true) {
+            inputRef.current.focus();
+            props.removeFocus();
         }
-      }
-    })
-    setLines(() => linesUpdated);
-    localStorage.setItem('tabs', JSON.stringify(tabs));
-    update(prevUpdater => !prevUpdater);
-  }
-  const [theme, setTheme] = useState(JSON.parse(localStorage.getItem('theme')) || "gradBlue");
-  const [tabFocus, setTabFocus] = useState(JSON.parse(localStorage.getItem('tabFocus')) || "none");
-  const removeTabFocus = () => setTabFocus("none");
-  const removeTab = (id) => {
-    setTabs(tabs.filter(element =>
-      element.id !== id
-    ));
-    setLines(lines.filter(element =>
-      (element.idFirst !== id) && (element.idSecond !== id)
-    ));
-    removeTabFocus();
-    localStorage.removeItem(id);
-  }
-  const changeStyle = (id, prop, value) => {
-    let tabsUpdated = tabs;
-    tabsUpdated.forEach((element, index) => {
-      if (element.id === id) {
-        element.style[prop] = value;
-      }
-    });
-    setTabs(tabsUpdated);
-    update(prevUpdater => !prevUpdater);
-  }
-  const changeType = (id, type) => {
-    let tabsUpdated = tabs;
-    tabsUpdated.forEach((element, index) => {
-      if (element.id === id) {
-        element.type = type;
-      }
-    });
-    setTabs(tabsUpdated);
-    update(prevUpdater => !prevUpdater);
-  }
-  const clearTabs = () => {
-    setTabs([]);
-    setLines([]);
-    update(prevUpdater => !prevUpdater);
-    localStorage.clear();
-    setTheme("gradBlue");
-  }
+    }, [props.focus]);
+    useEffect(() => {
+        localStorage.setItem(props.id, JSON.stringify(position));
+    }, [position]);
+  
+    return (
+        <animated.div
+            {...bindPosition()}
+            style={{
+              x: position.x,
+              y: position.y,
+              position: "absolute"
+            }}
+            onMouseEnter={() => setHover({ display: "block" })}
+            onMouseLeave={() => setHover({ display: "none" })}
+        >
+            <div className="tabContainer"
+                style={props.type === "textarea" ? {
+                height: "240px",
+                } : null}
+            >
+            <div className="longRow">
+                <button
+                    style={hover}
+                    onClick={() => props.addTab("", position.x, position.y, position.x, position.y - 100, props.id)}
+                >
+                    +
+                </button>
+            </div>
+            <button
+                style={hover}
+                onClick={() => props.addTab("", position.x, position.y, position.x - 300, position.y, props.id)}
+            >
+                +
+            </button>
+            {props.type === "connector" &&
+                <div className="connector"
+                    style={{
+                        color: (props.tabFocus === props.id ? "lightblue" : (
+                            props.theme !== "gradRed" && props.theme !== "gradBlue" ? tabStyle.background :
+                            (props.theme === "gradRed" ? "red" : "darkblue")
+                        ))
+                    }}
+                >
+                    <VscCircleFilled />
+                </div>
+            }
+            {props.type !== "connector" &&
+                <div className="tab" style={tabStyle}>
+                    {props.type === "input" &&
+                        <input
+                            type="text"
+                            value={props.text}
+                            ref={inputRef}
+                            onChange={(e) => props.handleTextChange(props.id, e.target.value)}
+                            onClick={() => props.setTabFocus(props.id)}
+                            style={inputStyle}
+                        />
+                    }
+                {props.type === "textarea" &&
+                    <textarea
+                        value={props.text}
+                        ref={inputRef}
+                        onChange={(e) => props.handleTextChange(props.id, e.target.value)}
+                        onClick={() => props.setTabFocus(props.id)}
+                        style={inputStyle}
+                    />
+                }
+                </div>
+            }
+            <button
+                style={hover}
+                onClick={() => props.addTab("", position.x, position.y, position.x + 300, position.y, props.id)}
+            >
+                +
+            </button>
+            <div className="longRow">
+                <button
+                    style={hover}
+                    onClick={() => props.addTab("", position.x, position.y, position.x, position.y + 100, props.id)}
+                >
+                    +
+                </button>
+            </div>
+        </div>
+        </animated.div>
+    );
+});
 
-  useEffect(() => {
-    localStorage.setItem('tabs', JSON.stringify(tabs));
-    localStorage.setItem('lines', JSON.stringify(lines));
-    localStorage.setItem('theme', JSON.stringify(theme));
-    localStorage.setItem('tabFocus', JSON.stringify(tabFocus));
-    if (tabs.length === 0) {
-      localStorage.clear();
-    }
-  }, [tabs, lines, theme, tabFocus, updater]);
-
-  return (
-    <>
-    <div
-      style={{
-        width: window.innerWidth,
-        height: window.innerHeight,
-        position: "fixed",
-        zIndex: "-1",
-      }}
-      onClick={() => removeTabFocus()}
-    ></div>
-    <>
-      <ClearButton
-        theme={theme}
-        clearTabs={clearTabs}
-      />
-      
-      <AddButton
-        addRootTab={addRootTab}
-        theme={theme}
-      />
-
-      <Search 
-        tabs={tabs}
-        setFocus={setFocus}
-        theme={theme}
-      />
-
-      <ToolBar
-        setTheme={setTheme}
-        theme={theme}
-        tabFocus={tabFocus}
-        removeTab={removeTab}
-        changeStyle={changeStyle}
-        changeType={changeType}
-      />
-
-      {lines.map(element => (
-        <Line
-          key={element.idSecond}
-          xFirst={element.xFirst}
-          yFirst={element.yFirst}
-          xSecond={element.xSecond}
-          ySecond={element.ySecond}
-          theme={theme}
-        />
-      ))}
-
-      {tabs.map((element) => (
-        <Tab
-          key={element.id}
-          id={element.id}
-          text={element.text}
-          x={element.x}
-          y={element.y}
-          focus={element.focus}
-          addTab={addTab}
-          updateLines={updateLines}
-          handleTextChange={handleTextChange}
-          removeFocus={removeFocus}
-          theme={theme}
-          tabFocus={tabFocus}
-          setTabFocus={setTabFocus}
-          style={element.style}
-          type={element.type}
-        />
-      ))}
-    </>
-    </>
-  );
-}
+export default Tab;
