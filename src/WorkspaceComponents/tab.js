@@ -2,39 +2,12 @@ import React, { useState, useRef, useEffect } from "react";
 import { animated } from "react-spring";
 import { useDrag } from "@use-gesture/react";
 import { VscCircleFilled } from 'react-icons/vsc';
-
-const styleBlack = { background: "black" };
-const styleGreen = { background: "#3EC70B" };
-const styleOrange = { background: "#FF9F29" };
-const stylePurple = { background: "#541690" };
-const styleGradBlue = { background: "linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%)" };
-const styleGradRed = { background: "linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%)" };
+import styles from '../styles'
 
 const Tab = React.memo(function Tab(props) {
-    let style = {};
-    switch (props.theme) {
-        case "black":
-            style = styleBlack;
-            break;
-        case "green":
-            style = styleGreen;
-            break;
-        case "orange":
-            style = styleOrange;
-            break;
-        case "purple":
-            style = stylePurple;
-            break;
-        case "gradBlue":
-            style = styleGradBlue;
-            break;
-        case "gradRed":
-            style = styleGradRed;
-            break;
-        default:
-            style = styleBlack;
-            break;
-    }
+    let style = { background: styles.find(element =>
+      element.name === props.theme
+    ).background };
     let tabStyle = {
       fontFamily: props.style.fontFamily,
       fontWeight: props.style.fontWeight,

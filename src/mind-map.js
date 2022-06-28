@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import Line from './WorkspaceComponents/line';
-import Search from './UIComponents/search';
 import Tab from './WorkspaceComponents/tab';
+import Search from './UIComponents/search';
 import AddButton from "./UIComponents/addButton";
+import ClearButton from "./UIComponents/clearButton";
 import ToolBar from "./UIComponents/toolBar";
 import "./mind-map.css";
-import ClearButton from "./UIComponents/clearButton";
 
 export default function Root() {
   const [updater, update] = useState(true);
