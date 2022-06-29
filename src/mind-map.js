@@ -13,7 +13,7 @@ export default function Root() {
         JSON.parse(localStorage.getItem('tabs')) || [{
         id: "id" + Math.random().toString(16).slice(2),
         text: "Новая диаграмма",
-        x: parseInt(window.innerWidth / 2 - 130),
+        x: parseInt(window.innerWidth / 2 - 131),
         y: parseInt(window.innerHeight / 2 - 150),
         focus: true,
         style: {
@@ -67,7 +67,7 @@ export default function Root() {
         setTabs([...tabs, {
             id: id,
             text: '',
-            x: parseInt((window.innerWidth / 2) - 130),
+            x: parseInt((window.innerWidth / 2) - 131),
             y: parseInt((window.innerHeight / 2) - 60),
             focus: true,
             style: {
