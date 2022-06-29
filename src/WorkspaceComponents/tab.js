@@ -5,9 +5,14 @@ import { VscCircleFilled } from 'react-icons/vsc';
 import styles from '../styles'
 
 const Tab = React.memo(function Tab(props) {
-    let style = { background: styles.find(element =>
-        element.name === props.theme
-    ).background };
+    let style = {
+        background: styles.find(element =>
+            element.name === props.theme
+        ).background,
+        color: styles.find(element =>
+            element.name === props.theme
+        ).color
+    };
     let tabStyle = {
         fontFamily: props.style.fontFamily,
         fontWeight: props.style.fontWeight,
@@ -96,10 +101,7 @@ const Tab = React.memo(function Tab(props) {
                 {props.type === "connector" &&
                     <div className="connector"
                         style={{
-                            color: (props.tabFocus === props.id ? "lightblue" : (
-                                props.theme !== "gradRed" && props.theme !== "gradBlue" ? tabStyle.background :
-                                (props.theme === "gradRed" ? "red" : "darkblue")
-                            ))
+                            color: props.tabFocus === props.id ? "lightblue" : style.color
                         }}
                     >
                         <VscCircleFilled />

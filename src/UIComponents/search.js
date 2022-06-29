@@ -3,7 +3,7 @@ import { BsSearch } from 'react-icons/bs';
 import styles from '../styles';
 
 function Search(props) {
-    let style = { color: props.theme !== "black" ? styles.find(element =>
+    let style = { color: (props.theme !== "black" && props.theme !== "gradBlack") ? styles.find(element =>
         element.name === props.theme
     ).color : "lightblue" };
 

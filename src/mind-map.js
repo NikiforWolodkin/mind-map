@@ -87,8 +87,8 @@ export default function Root() {
         setTabs([...tabs, {
             id: idNew,
             text: text,
-            x: xNew,
-            y: yNew,
+            x: (window.innerWidth - 262) > xNew ? xNew : (window.innerWidth - 262),
+            y: (window.innerHeight - 38) > yNew ? yNew : (window.innerHeight - 38),
             focus: true,
             style: {
                 fontFamily: "'Montserrat', sans-serif",
@@ -104,8 +104,8 @@ export default function Root() {
             xFirst: x,
             yFirst: y,
             idSecond: idNew,
-            xSecond: xNew,
-            ySecond: yNew,
+            xSecond: (window.innerWidth - 262) > xNew ? xNew : (window.innerWidth - 262),
+            ySecond: (window.innerHeight - 38) > yNew ? yNew : (window.innerHeight - 38),
         }]);
         setTabFocus(idNew);
     };
@@ -166,6 +166,7 @@ export default function Root() {
     const clearTabs = () => {
         setTabs([]);
         setLines([]);
+        setTabFocus("none");
         setTheme("gradBlue");
         update(prevUpdater => !prevUpdater);
         localStorage.clear();

@@ -15,7 +15,7 @@ const styleDisabled = {
 };
 
 function ToolBar(props) {
-    let style = { color: props.theme !== "black" ? styles.find(element =>
+    let style = { color: (props.theme !== "black" && props.theme !== "gradBlack") ? styles.find(element =>
         element.name === props.theme
     ).color : "lightblue" };
 
@@ -40,10 +40,13 @@ function ToolBar(props) {
                     onClick={() => chooseTool("customization")}
                     onMouseEnter={() => setCustomizationStyle(style)}
                     onMouseLeave={() => setCustomizationStyle({ color: "black" })}
-                    style={(props.tabFocus === "none" || 
-                        props.tabs.find(element => element.id === props.tabFocus).type === "connector") ? styleDisabled : (
-                        tool === "customization" ? style : customizationStyle
-                    )}
+                    style={
+                        props.tabs.find(element => element.id === props.tabFocus) !== undefined ? (
+                            props.tabFocus === "none" || 
+                            props.tabs.find(element => element.id === props.tabFocus).type === "connector") ? styleDisabled : (
+                            tool === "customization" ? style : customizationStyle
+                        ) : styleDisabled
+                    }
                 >
                     <BsBrush />
                 </div>

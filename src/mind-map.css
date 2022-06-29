@@ -82,21 +82,9 @@
 }
 
 .theme {
-    width: 82.5px;
-    height: 82.5px;
-    margin: 0 0 10px 10px;
-    border-radius: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-}
-
-.themeInner {
-    width: 62.5px;
-    height: 62.5px;
-    background-color: white;
-    border-radius: 100%;
+    color: white;
+    margin-top: 0 !important;
+    margin-bottom: 10px !important;
 }
 
 .themeHeader {
