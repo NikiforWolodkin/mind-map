@@ -69,7 +69,7 @@ const Tab = React.memo(function Tab(props) {
             style={{
               x: position.x,
               y: position.y,
-              position: "absolute"
+              position: "absolute",
             }}
             onMouseEnter={() => setHover({ display: "block" })}
             onMouseLeave={() => setHover({ display: "none" })}
