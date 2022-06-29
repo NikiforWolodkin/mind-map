@@ -41,21 +41,21 @@ const Tab = React.memo(function Tab(props) {
     });
     const bindPosition = useDrag((params) => {
         setPosition({
-          x: initialPosition.x + params.offset[0],
-          y: initialPosition.y + params.offset[1],
+          x: params.offset[0],
+          y: params.offset[1],
         });
-        props.updateLines(props.id, initialPosition.x + params.offset[0], initialPosition.y + params.offset[1]);
+        props.updateLines(props.id, params.offset[0], params.offset[1]);
         if (props.tabFocus !== props.id) {
             props.setTabFocus(props.id);
         }
     }, {
         bounds: {
-            top: 0 - initialPosition.y,
-            left: 0 - initialPosition.x,
-            bottom: window.innerHeight - initialPosition.y - (props.type === "textarea" ? 200 : 38),
-            right: window.innerWidth - initialPosition.x - 262,
+            top: 0,
+            left: 0,
+            bottom: window.innerHeight - (props.type === "textarea" ? 200 : 38),
+            right: window.innerWidth - 262,
         },
-        from: [position.x - initialPosition.x, position.y - initialPosition.y],
+        from: [position.x, position.y],
     });
 
     useEffect(() => {
