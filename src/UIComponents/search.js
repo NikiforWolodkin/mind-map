@@ -18,30 +18,29 @@ function Search(props) {
             return;
         }
       
-        let updatedResults = props.tabs.filter(element => 
+        let resultsUpdated = props.tabs.filter(element => 
             element.text.toUpperCase().indexOf(search.toUpperCase()) !== -1
         );
-        updatedResults = updatedResults.map(element => ({
+        resultsUpdated = resultsUpdated.map(element => ({
             text: element.text,
             id: element.id,
             hover: false,
         }));
-        setResults(updatedResults);
+        setResults(resultsUpdated);
     };
     const setHover = (index) => {
         if (results.length === 0) {
             return;
         }
 
-        let updatedResults = results.map(element => {
-            let elementNoHover = element;
-            elementNoHover.hover = false;
-            return elementNoHover;
+        let resultsUpdated = results;
+        resultsUpdated.map(element => {
+            element.hover = false;
         });
         if (index !== -1) {
-            updatedResults[index].hover = true;
+            resultsUpdated[index].hover = true;
         }
-        setResults(updatedResults);
+        setResults(resultsUpdated);
         update(prevUpdater => !prevUpdater);
     }
     

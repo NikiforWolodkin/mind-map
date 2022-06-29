@@ -40,7 +40,8 @@ function ToolBar(props) {
                     onClick={() => chooseTool("customization")}
                     onMouseEnter={() => setCustomizationStyle(style)}
                     onMouseLeave={() => setCustomizationStyle({ color: "black" })}
-                    style={props.tabFocus === "none" ? styleDisabled : (
+                    style={(props.tabFocus === "none" || 
+                        props.tabs.find(element => element.id === props.tabFocus).type === "connector") ? styleDisabled : (
                         tool === "customization" ? style : customizationStyle
                     )}
                 >
@@ -77,7 +78,8 @@ function ToolBar(props) {
                 {tool === "theme" && 
                     <Theme setTheme={props.setTheme} />
                 }
-                {(tool === "customization" && props.tabFocus !== "none") && 
+                {((tool === "customization" && props.tabFocus !== "none") && 
+                    props.tabs.find(element => element.id === props.tabFocus).type !== "connector") &&
                     <Customization 
                         changeStyle={props.changeStyle} 
                         tabFocus={props.tabFocus}

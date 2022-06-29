@@ -43,6 +43,14 @@ const Tab = React.memo(function Tab(props) {
         if (props.tabFocus !== props.id) {
             props.setTabFocus(props.id);
         }
+    }, {
+        bounds: {
+            top: 0 - initialPosition.y,
+            left: 0 - initialPosition.x,
+            bottom: window.innerHeight - initialPosition.y - (props.type === "textarea" ? 200 : 38),
+            right: window.innerWidth - initialPosition.x - 262,
+        },
+        from: [position.x - initialPosition.x, position.y - initialPosition.y],
     });
 
     useEffect(() => {
@@ -71,37 +79,46 @@ const Tab = React.memo(function Tab(props) {
                 height: "240px",
                 } : null}
             >
-            <div className="longRow">
+                <div className="longRow">
+                    <button
+                        style={hover}
+                        onClick={() => props.addTab("", position.x, position.y, position.x, position.y - 100, props.id)}
+                    >
+                        +
+                    </button>
+                </div>
                 <button
                     style={hover}
-                    onClick={() => props.addTab("", position.x, position.y, position.x, position.y - 100, props.id)}
+                    onClick={() => props.addTab("", position.x, position.y, position.x - 300, position.y, props.id)}
                 >
                     +
                 </button>
-            </div>
-            <button
-                style={hover}
-                onClick={() => props.addTab("", position.x, position.y, position.x - 300, position.y, props.id)}
-            >
-                +
-            </button>
-            {props.type === "connector" &&
-                <div className="connector"
-                    style={{
-                        color: (props.tabFocus === props.id ? "lightblue" : (
-                            props.theme !== "gradRed" && props.theme !== "gradBlue" ? tabStyle.background :
-                            (props.theme === "gradRed" ? "red" : "darkblue")
-                        ))
-                    }}
-                >
-                    <VscCircleFilled />
-                </div>
-            }
-            {props.type !== "connector" &&
-                <div className="tab" style={tabStyle}>
-                    {props.type === "input" &&
-                        <input
-                            type="text"
+                {props.type === "connector" &&
+                    <div className="connector"
+                        style={{
+                            color: (props.tabFocus === props.id ? "lightblue" : (
+                                props.theme !== "gradRed" && props.theme !== "gradBlue" ? tabStyle.background :
+                                (props.theme === "gradRed" ? "red" : "darkblue")
+                            ))
+                        }}
+                    >
+                        <VscCircleFilled />
+                    </div>
+                }
+                {props.type !== "connector" &&
+                    <div className="tab" style={tabStyle}>
+                        {props.type === "input" &&
+                            <input
+                                type="text"
+                                value={props.text}
+                                ref={inputRef}
+                                onChange={(e) => props.handleTextChange(props.id, e.target.value)}
+                                onClick={() => props.setTabFocus(props.id)}
+                                style={inputStyle}
+                            />
+                        }
+                    {props.type === "textarea" &&
+                        <textarea
                             value={props.text}
                             ref={inputRef}
                             onChange={(e) => props.handleTextChange(props.id, e.target.value)}
@@ -109,32 +126,23 @@ const Tab = React.memo(function Tab(props) {
                             style={inputStyle}
                         />
                     }
-                {props.type === "textarea" &&
-                    <textarea
-                        value={props.text}
-                        ref={inputRef}
-                        onChange={(e) => props.handleTextChange(props.id, e.target.value)}
-                        onClick={() => props.setTabFocus(props.id)}
-                        style={inputStyle}
-                    />
+                    </div>
                 }
-                </div>
-            }
-            <button
-                style={hover}
-                onClick={() => props.addTab("", position.x, position.y, position.x + 300, position.y, props.id)}
-            >
-                +
-            </button>
-            <div className="longRow">
                 <button
                     style={hover}
-                    onClick={() => props.addTab("", position.x, position.y, position.x, position.y + 100, props.id)}
+                    onClick={() => props.addTab("", position.x, position.y, position.x + 300, position.y, props.id)}
                 >
                     +
                 </button>
+                <div className="longRow">
+                    <button
+                        style={hover}
+                        onClick={() => props.addTab("", position.x, position.y, position.x, position.y + 100, props.id)}
+                    >
+                        +
+                    </button>
+                </div>
             </div>
-        </div>
         </animated.div>
     );
 });
