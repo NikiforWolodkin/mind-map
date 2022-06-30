@@ -88,7 +88,7 @@ export default function Root() {
             id: idNew,
             text: text,
             x: xNew > 0 ? ((window.innerWidth - 262) > xNew ? xNew : (window.innerWidth - 262)) : 0,
-            y: yNew > 0 ? ((window.innerHeight - 38) > yNew ? yNew : (window.innerHeight - 38)) : 0,
+            y: yNew > 0 ? ((window.innerHeight - 78) > yNew ? yNew : (window.innerHeight - 78)) : 0,
             focus: true,
             style: {
                 fontFamily: "'Montserrat', sans-serif",
@@ -105,7 +105,7 @@ export default function Root() {
             yFirst: y,
             idSecond: idNew,
             xSecond: xNew > 0 ? ((window.innerWidth - 262) > xNew ? xNew : (window.innerWidth - 262)) : 0,
-            ySecond: yNew > 0 ? ((window.innerHeight - 38) > yNew ? yNew : (window.innerHeight - 38)) : 0,
+            ySecond: yNew > 0 ? ((window.innerHeight - 78) > yNew ? yNew : (window.innerHeight - 78)) : 0,
         }]);
         setTabFocus(idNew);
     };
