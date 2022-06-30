@@ -52,7 +52,7 @@ const Tab = React.memo(function Tab(props) {
         bounds: {
             top: 0,
             left: 0,
-            bottom: window.innerHeight - (props.type === "textarea" ? 200 : 38),
+            bottom: window.innerHeight - (props.type === "textarea" ? 240 : 78),
             right: window.innerWidth - 262,
         },
         from: [position.x, position.y],
