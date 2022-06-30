@@ -5,7 +5,7 @@ import { VscCircleFilled } from 'react-icons/vsc';
 import styles from '../styles'
 
 const Tab = React.memo(function Tab(props) {
-    let style = {
+    const style = {
         background: styles.find(element =>
             element.name === props.theme
         ).background,
@@ -13,7 +13,7 @@ const Tab = React.memo(function Tab(props) {
             element.name === props.theme
         ).color
     };
-    let tabStyle = {
+    const tabStyle = {
         fontFamily: props.style.fontFamily,
         fontWeight: props.style.fontWeight,
         fontStyle: props.style.fontStyle,
@@ -23,7 +23,7 @@ const Tab = React.memo(function Tab(props) {
         ),
         height: props.type === "textarea" ? "200px" : "38px",
     };
-    let inputStyle = {
+    const inputStyle = {
         background: props.style.fill === "fill" ? "none" : "white",
         color: (
             props.style.fill === "fill" && tabStyle.background !== "white" ?

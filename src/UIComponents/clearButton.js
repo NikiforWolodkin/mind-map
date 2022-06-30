@@ -2,7 +2,7 @@ import { MdDeleteOutline } from 'react-icons/md';
 import styles from '../styles';
 
 function ClearButton(props) {
-    let style = { background: styles.find(element =>
+    const style = { background: styles.find(element =>
         element.name === props.theme
     ).background };
     

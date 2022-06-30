@@ -2,7 +2,7 @@ import React from 'react';
 import styles from '../styles';
 
 const Line = React.memo(function Line(props) {
-    let style = styles.find(element =>
+    const style = styles.find(element =>
         element.name === props.theme
     ).color;
 

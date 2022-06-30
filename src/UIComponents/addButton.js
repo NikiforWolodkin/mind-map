@@ -1,7 +1,7 @@
 import styles from '../styles';
 
 function AddButton(props) {
-    let style = { background: styles.find(element =>
+    const style = { background: styles.find(element =>
         element.name === props.theme
     ).background };
     

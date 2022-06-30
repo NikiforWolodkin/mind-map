@@ -15,7 +15,7 @@ const styleDisabled = {
 };
 
 function ToolBar(props) {
-    let style = { color: (props.theme !== "black" && props.theme !== "gradBlack") ? styles.find(element =>
+    const style = { color: (props.theme !== "black" && props.theme !== "gradBlack") ? styles.find(element =>
         element.name === props.theme
     ).color : "lightblue" };
 
