@@ -17,10 +17,8 @@ const Tab = React.memo(function Tab(props) {
         fontFamily: props.style.fontFamily,
         fontWeight: props.style.fontWeight,
         fontStyle: props.style.fontStyle,
-        background: (
-            props.tabFocus === props.id ? "lightblue" :
-            (props.style.background === "theme" ? style.background : props.style.background)
-        ),
+        background: props.style.background === "theme" ? style.background : props.style.background,
+        outline: props.tabFocus === props.id ? "lightblue solid 4px" : "none",
         height: props.type === "textarea" ? "200px" : "38px",
     };
     const inputStyle = {
