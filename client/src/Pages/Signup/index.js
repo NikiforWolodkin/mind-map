@@ -3,7 +3,7 @@ import Submit from '../../Components/Forms/submit';
 import HTMLLink from '../../Components/General/Link';
 import { Link } from 'react-router-dom';
 
-function Login() {
+function Signup() {
     return (
         <form
             className="h-screen flex flex-col justify-center items-center"
@@ -12,7 +12,7 @@ function Login() {
             <div
                 className="text-4xl font-bold my-4"
             >
-                Вход
+                Регистрация
             </div>
             <Input
                 type="email"
@@ -26,27 +26,28 @@ function Login() {
                 id="password"
                 placeholder="Пароль"
             />
+            <Input
+                type="password"
+                name="passwordRepeat"
+                id="passwordRepeat"
+                placeholder="Повторите пароль"
+            />
             <Link to="/account">
                 <Submit
                     type="submit"
                     name="submit"
                     id="submit"
-                    value="Войти"
+                    value="Регистрация"
                 />
             </Link>
             <div
                 className="text-lg my-1"
             >
-                <HTMLLink>Забыли пароль?</HTMLLink>
-            </div>
-            <div
-                className="text-lg my-1"
-            >
-                Нет аккаунта? <Link to="/signup"><HTMLLink>Создайте аккаунт</HTMLLink></Link>
+                Уже есть аккаунт? <Link to="/"><HTMLLink>Войдите</HTMLLink></Link>
             </div>
             <div className="h-8"></div>
         </form>
     );
 }
   
-export default Login;
+export default Signup;
