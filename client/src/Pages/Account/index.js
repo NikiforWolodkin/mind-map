@@ -1,32 +1,47 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FiFolder, FiStar } from 'react-icons/fi';
 import { MdOutlineSchema } from 'react-icons/md';
 import { FcMindMap, FcFolder } from 'react-icons/fc';
+import LoadingSpinner from '../../Components/General/LoadingSpinner';
 import Search from '../../Components/General/Search';
 import DropDown from '../../Components/General/DropDown';
 import ListElement from '../../Components/General/ListElement';
 import CreateButton from '../../Components/General/CreateButton';
 import MindMapPreview from '../../Components/General/MindMapPreview';
 
-function Account() {
+function Account(props) {
+    const [isLoading, setIsLoading] = useState(true);
     const [user, setUser] = useState("");
+    const navigate = useNavigate();
+
     useEffect(() => {
-        fetch("/api").then(
+        fetch("/api/auth/users").then(
             response => response.json()
         ).then(
             user => {
-                setUser(user)
+                setUser(user);
+                setIsLoading(false);
             }
         )
-    }, [])
+    }, []);
 
+    useEffect(() => {
+        if (!props.loggedIn) {
+            navigate("/error");
+        }
+    }, []);
+
+    if (props.loggedIn && isLoading)
+    return <LoadingSpinner />;
+
+    if (props.loggedIn && !isLoading)
     return (
         <div className="flex h-screen">
             <div className="flex flex-col w-80 h-full border-r">
                 <div className="flex items-center w-full h-14 border-gray-300 border-b text-xl">
                     <div className="ml-4">
-                        {user.userName}
+                        {user}
                     </div>
                 </div>
                 <ListElement text="Последние">
@@ -49,7 +64,7 @@ function Account() {
                     />
                     <Link 
                         className="ml-auto"
-                        to="/"
+                        to="/login"
                     >
                         <DropDown />
                     </Link>
