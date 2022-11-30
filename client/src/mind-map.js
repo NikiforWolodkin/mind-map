@@ -193,9 +193,9 @@ export default function Root() {
                     width: window.innerWidth,
                     height: window.innerHeight,
                     position: "fixed",
-                    zIndex: "0",
+                    zIndex: "-1",
                 }}
-                onClick={ () => removeTabFocus() }
+                onClick={() => removeTabFocus()}
             ></div>
             <ClearButton
                 theme={theme}
