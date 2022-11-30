@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { FcMindMap, FcFolder } from 'react-icons/fc';
+import { useNavigate } from 'react-router-dom';
 
 function MindMapPreview(props) {
     const [hover, setHover] = useState(false);
+    const navigate = useNavigate();
 
     return (
         <div 
-            className="flex flex-col items-center w-80 h-64 mr-4 border rounded-md tracking-tight text-xl cursor-pointer shadow-sm"
+            className="flex flex-col items-center w-80 h-64 mr-4 border rounded-md tracking-tight text-xl cursor-pointer shadow"
             onMouseEnter={() => setHover(true)}
             onMouseLeave={() => setHover(false)}
+            onClick={ () => navigate("/mindmap") }
         >
             <div className="flex items-center h-3/4 text-4xl">
                 {props.image !== null ? <img src={props.image} className="object-none w-full h-full rounded-md" /> : 

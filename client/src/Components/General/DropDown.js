@@ -4,7 +4,7 @@ function DropDown(props) {
     return (
         <div className="flex items-center py-2 text-xl rounded hover:bg-gray-200 cursor-pointer">
             <div className="ml-2">
-                Аккаунт
+                {props.text}
             </div>
             <BsChevronDown
                 className="relative top-0.5 mx-2"
