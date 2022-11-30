@@ -5,6 +5,7 @@ import Search from './UIComponents/search';
 import AddButton from "./UIComponents/addButton";
 import ClearButton from "./UIComponents/clearButton";
 import ToolBar from "./UIComponents/toolBar";
+import SaveBar from "./Components/UI/saveBar";
 import "./mind-map.css";
 
 export default function Root() {
@@ -197,10 +198,13 @@ export default function Root() {
                 }}
                 onClick={ () => removeTabFocus() }
             ></div>
-            <ClearButton
+
+            {/* <ClearButton
                 theme={theme}
                 clearTabs={clearTabs}
-            />
+            /> */}
+
+            <SaveBar />
 
             <AddButton
                 addRootTab={addRootTab}
@@ -213,7 +217,7 @@ export default function Root() {
                 theme={theme}
             />
 
-            <ToolBar
+            {/* <ToolBar
                 setTheme={setTheme}
                 theme={theme}
                 tabFocus={tabFocus}
@@ -221,7 +225,7 @@ export default function Root() {
                 removeTab={removeTab}
                 changeStyle={changeStyle}
                 changeType={changeType}
-            />
+            /> */}
 
             {lines.map(element => (
                 <Line
