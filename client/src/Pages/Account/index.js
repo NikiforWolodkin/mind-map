@@ -5,7 +5,7 @@ import { MdOutlineSchema } from 'react-icons/md';
 import { FcMindMap, FcFolder } from 'react-icons/fc';
 import LoadingSpinner from '../../Components/General/LoadingSpinner';
 import Search from '../../Components/General/Search';
-import DropDown from '../../Components/General/DropDown';
+import Button from '../../Components/General/Button';
 import ListElement from '../../Components/General/ListElement';
 import CreateButton from '../../Components/General/CreateButton';
 import MindMapPreview from '../../Components/General/MindMapPreview';
@@ -87,23 +87,9 @@ function Account(props) {
                     />
                     <div
                         className="ml-auto"
-                        onMouseEnter={ () => setShowDropDown(true) }
-                        onMouseLeave={ () => setShowDropDown(false) }
+                        onClick={ () => logOut() }
                     >
-                        <DropDown 
-                            text="Аккаунт"
-                            show={showDropDown}
-                        >
-                            <div className="mb-2">
-                                Аккаунт
-                            </div>
-                            <div 
-                                className="text-red-500"
-                                onClick={ () => logOut() }
-                            >
-                                Выйти
-                            </div>
-                        </DropDown>
+                        <Button text="Аккаунт" />
                     </div>
                 </div>
                 <div className="flex flex-col p-4">

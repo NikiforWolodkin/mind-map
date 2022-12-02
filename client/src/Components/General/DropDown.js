@@ -3,7 +3,7 @@ import { BsChevronDown } from 'react-icons/bs';
 function DropDown(props) {
     return (
         <>
-            <div className="flex items-center py-2 w-34 text-xl rounded hover:bg-gray-200 cursor-pointer">
+            <div className="flex items-center py-2 w-34 text-xl rounded cursor-pointer">
                 <div className="ml-2">
                     {props.text}
                 </div>
