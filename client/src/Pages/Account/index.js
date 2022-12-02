@@ -12,6 +12,7 @@ import MindMapPreview from '../../Components/General/MindMapPreview';
 
 function Account(props) {
     const [isLoading, setIsLoading] = useState(true);
+    const [showDropDown, setShowDropDown] = useState(false);
     const [user, setUser] = useState("");
     const navigate = useNavigate();
 
@@ -86,9 +87,23 @@ function Account(props) {
                     />
                     <div
                         className="ml-auto"
-                        onClick={ () => logOut() }
+                        onMouseEnter={ () => setShowDropDown(true) }
+                        onMouseLeave={ () => setShowDropDown(false) }
                     >
-                        <DropDown text="Аккаунт" />
+                        <DropDown 
+                            text="Аккаунт"
+                            show={showDropDown}
+                        >
+                            <div className="mb-2">
+                                Аккаунт
+                            </div>
+                            <div 
+                                className="text-red-500"
+                                onClick={ () => logOut() }
+                            >
+                                Выйти
+                            </div>
+                        </DropDown>
                     </div>
                 </div>
                 <div className="flex flex-col p-4">

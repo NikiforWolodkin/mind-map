@@ -4,8 +4,9 @@ import Tab from './WorkspaceComponents/tab';
 import Search from './UIComponents/search';
 import AddButton from "./UIComponents/addButton";
 import ClearButton from "./UIComponents/clearButton";
-import ToolBar from "./UIComponents/toolBar";
+import ToolBar from "./Components/UI/toolBar";
 import SaveBar from "./Components/UI/saveBar";
+import SearchBar from "./Components/UI/searchBar";
 import "./mind-map.css";
 
 export default function Root() {
@@ -206,16 +207,20 @@ export default function Root() {
 
             <SaveBar />
 
-            <AddButton
+            <SearchBar />
+
+            <ToolBar />
+
+            {/* <AddButton
                 addRootTab={addRootTab}
                 theme={theme}
-            />
+            /> */}
 
-            <Search 
+            {/* <Search 
                 tabs={tabs}
                 setFocus={setFocus}
                 theme={theme}
-            />
+            /> */}
 
             {/* <ToolBar
                 setTheme={setTheme}
