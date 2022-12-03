@@ -1,4 +1,5 @@
 const User = require('./models/User');
+const MindMap = require('./models/MindMap');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
@@ -21,8 +22,10 @@ class authController {
             if (candidate) {
                 return res.status(400).json({message: "Email is already taken", type: 1});
             }
+            console.log(password)
             const hashPassword = bcrypt.hashSync(password, 4);
             const user = new User({email, password: hashPassword});
+            console.log(user);
             await user.save();
             return res.json({message: "Succesfully registered"});
         }
