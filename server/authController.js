@@ -61,11 +61,22 @@ class authController {
             if (!user) {
                 return res.status(400).json({message: "User not found", type: 1});
             }
-            return res.json({message: "Successfully fetched", user: user});
+            const mindMaps = await MindMap.find({userId: user._id});
+            return res.json({message: "Successfully fetched", user: {email: user.email}, mindMaps: mindMaps});
         }
         catch (e) {
             console.log(e);
         }
+    }
+
+    async addMindMap(req, res) {
+        const user = await User.findOne({email: req.user.email});
+        if (!user) {
+            return res.status(400).json({message: "User not found", type: 1});
+        }
+        const mindMap = new MindMap({userId: user._id});
+        await mindMap.save();
+        return res.json({message: "Succesfully added"});
     }
 }
 

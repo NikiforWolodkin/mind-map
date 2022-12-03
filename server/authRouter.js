@@ -9,6 +9,7 @@ router.post("/registration", [
     check("password", "Password can't be empty").notEmpty()
 ], controller.registration);
 router.post("/login", controller.login);
+router.post("/addMindMap", authMiddleware, controller.addMindMap);
 router.get("/user", authMiddleware, controller.getUsers);
 
 module.exports = router;

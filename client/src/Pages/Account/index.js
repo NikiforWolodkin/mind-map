@@ -14,12 +14,62 @@ function Account(props) {
     const [isLoading, setIsLoading] = useState(true);
     const [showDropDown, setShowDropDown] = useState(false);
     const [user, setUser] = useState("");
+    const [mindMaps, setMindMaps] = useState([]);
     const navigate = useNavigate();
 
     const logOut = () => {
         props.setGlobalToken();
         props.setGlobalLoggedIn();
         navigate("/login");
+    };
+
+    const addNewMindMap = async () => {
+        try {
+            const response = await fetch("/api/auth/addMindMap", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authentication': 'Token ' +  props.token
+                }, 
+                body: JSON.stringify({})
+            });
+    
+            if (!response.ok) {
+                props.setGlobalToken();
+                props.setGlobalLoggedIn();
+                throw new Error(`POST error, status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log(result);
+        }
+        catch (e) {
+            console.log(e);
+        }
+
+        try {
+            const response = await fetch("/api/auth/user", {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authentication': 'Token ' +  props.token
+                }, 
+            });
+    
+            if (!response.ok) {
+                props.setGlobalToken();
+                props.setGlobalLoggedIn();
+                throw new Error(`GET error, status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            setUser(result.user);
+            setMindMaps(result.mindMaps);
+        }
+        catch (e) {
+            console.log(e);
+            navigate("/error");
+        }
     };
 
     useEffect(() => {
@@ -41,6 +91,7 @@ function Account(props) {
     
                 const result = await response.json();
                 setUser(result.user);
+                setMindMaps(result.mindMaps);
                 setIsLoading(false);
             }
             catch (e) {
@@ -78,7 +129,7 @@ function Account(props) {
                 </ListElement>
             </div>
             <div className="flex flex-col w-full">
-                <div className="flex items-center w-full h-14 border-gray-300 border-b pr-8">
+                <div className="shrink-0 flex items-center w-full h-14 border-gray-300 border-b pr-8">
                     <Search
                         type="text"
                         name="search"
@@ -94,32 +145,23 @@ function Account(props) {
                 </div>
                 <div className="flex flex-col p-4">
                     <div className="flex pb-4">
-                        <CreateButton text="Новая интеллект-карта">
+                        <CreateButton 
+                            text="Новая интеллект-карта"
+                            onClick={addNewMindMap}
+                        >
                             <FcMindMap />
                         </CreateButton>
-                        <CreateButton text="Новая папка">
-                            <FcFolder />
-                        </CreateButton>
                     </div>
-                    <div className="flex">
-                        <MindMapPreview
-                            text="Интеллект-карта"
-                            type="mind-map"
-                            image="https://www.mindmapping.com/img/mind-map-example-empathy.png"
-                            updated="1 день"
-                        />
-                        <MindMapPreview
-                            text="Папка"
-                            type="folder"
-                            image={null}
-                            updated="3 дня"
-                        />
-                        <MindMapPreview
-                            text="Интеллект-карта"
-                            type="mind-map"
-                            image={null}
-                            updated="1 месяц"
-                        />
+                    <div className="flex flex-wrap">
+                        {mindMaps.map((mindMap) => {
+                            return <MindMapPreview
+                                key={mindMap._id}
+                                text={mindMap.name}
+                                type="mind-map"
+                                image={null}
+                                updated="1 минуту"
+                            />
+                        })}
                     </div>
                 </div>
             </div>
