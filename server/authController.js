@@ -74,7 +74,7 @@ class authController {
             if (!user) {
                 return res.status(400).json({message: "User not found", type: 1});
             }
-            const mindMap = new MindMap({userId: user._id});
+            const mindMap = new MindMap({userId: user._id, favorited: req.body.favorited, lastAccessTime: new Date()});
             await mindMap.save();
             return res.json({message: "Succesfully added"});
         }

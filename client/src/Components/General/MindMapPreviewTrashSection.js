@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useFocus, useRef } from 'react';
-import { FcMindMap, FcFolder } from 'react-icons/fc';
 import { useNavigate } from 'react-router-dom';
+import { FcMindMap, FcFolder } from 'react-icons/fc';
 import { CgClose } from 'react-icons/cg';
+import { MdRefresh } from 'react-icons/md';
 import { AiOutlineStar, AiFillStar } from 'react-icons/ai';
 
-function MindMapPreview(props) {
+function MindMapPreviewTrashSection(props) {
     const [hover, setHover] = useState(false);
     const [text, setText] = useState("");
     const [isTyping, setIsTyping] = useState(false);
@@ -69,6 +70,12 @@ function MindMapPreview(props) {
         props.changeMindMap(mindMapUpdated);
     };
 
+    const deleteMindMap = e => {
+        e.stopPropagation();
+
+        props.deleteMindMap(props.mindMap);
+    };
+
     useEffect(() => {
         setText(props.mindMap.name)
     }, []);
@@ -93,17 +100,15 @@ function MindMapPreview(props) {
             <div className="absolute flex justify-end w-80 text-2xl text-gray-400">
                 <div 
                     className="my-2 mr-1 hover:text-red-500"
-                    onClick={ e => changeMindMap(e, "markedForDeletion") }
+                    onClick={ e => deleteMindMap(e) }
                 >
                     <CgClose />
                 </div>
                 <div 
-                    className="my-2 mr-2 hover:text-yellow-500"
-                    onClick={ e => changeMindMap(e, "favorited") }
+                    className="my-2 mr-2 hover:text-blue-500"
+                    onClick={ e => changeMindMap(e, "markedForDeletion") }
                 >
-                    {props.mindMap.favorited === true ? <div className="text-yellow-500">
-                        <AiFillStar />
-                    </div> : <AiOutlineStar />}
+                    <MdRefresh />
                 </div>
             </div>
             <div className="flex justify-evenly items-center h-3/4 w-full text-4xl">
@@ -138,4 +143,4 @@ function MindMapPreview(props) {
     );
 }
 
-export default MindMapPreview;
+export default MindMapPreviewTrashSection;

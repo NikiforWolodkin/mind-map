@@ -4,7 +4,8 @@ import { FiFolder, FiStar } from 'react-icons/fi';
 import { MdOutlineSchema } from 'react-icons/md';
 import { FcMindMap } from 'react-icons/fc';
 import { FaRegTrashAlt } from 'react-icons/fa';
-import { MdClose, MdRefresh } from 'react-icons/md';
+import { MdRefresh } from 'react-icons/md';
+import { CgClose } from 'react-icons/cg';
 import LoadingSpinner from '../../Components/General/LoadingSpinner';
 import SavingSpinner from '../../Components/General/savingSpinner';
 import BarError from '../../Components/Forms/barError';
@@ -13,6 +14,7 @@ import Button from '../../Components/General/Button';
 import ListElement from '../../Components/General/ListElement';
 import CreateButton from '../../Components/General/CreateButton';
 import MindMapPreview from '../../Components/General/MindMapPreview';
+import MindMapPreviewTrashSection from '../../Components/General/MindMapPreviewTrashSection';
 
 function Account(props) {
     const [error, setError] = useState(null);
@@ -54,7 +56,7 @@ function Account(props) {
         }
     };
 
-    const addNewMindMap = async () => {
+    const addNewMindMap = async favorited => {
         setIsSaving(true);
 
         try {
@@ -64,7 +66,7 @@ function Account(props) {
                     'Content-Type': 'application/json',
                     'Authentication': 'Token ' +  props.token
                 }, 
-                body: JSON.stringify({})
+                body: JSON.stringify({favorited: favorited})
             });
     
             if (!response.ok) {
@@ -268,16 +270,22 @@ function Account(props) {
                     />
                     <div
                         className="ml-auto"
-                        onClick={ () => logOut() }
+                        onClick={logOut}
                     >
                         <Button text="Аккаунт" />
                     </div>
                 </div>
                 <div className="flex flex-col p-4">
                     <div className="flex pb-4">
-                        {section !== "trash" ? <CreateButton 
+                        {section === "recent" ? <CreateButton 
                             text="Новая интеллект-карта"
-                            onClick={addNewMindMap}
+                            onClick={ () => addNewMindMap(false) }
+                        >
+                            <FcMindMap />
+                        </CreateButton> : null}
+                        {section === "favorited" ? <CreateButton 
+                            text="Новая интеллект-карта"
+                            onClick={ () => addNewMindMap(true) }
                         >
                             <FcMindMap />
                         </CreateButton> : null}
@@ -286,7 +294,7 @@ function Account(props) {
                             onClick={deleteAll}
                         >
                             <div className="text-red-500">
-                                <MdClose />
+                                <CgClose />
                             </div>
                         </CreateButton> : null}
                         {section === "trash" ? <CreateButton 
@@ -345,10 +353,11 @@ function Account(props) {
                                 return null;
                             }
 
-                            return <MindMapPreview
+                            return <MindMapPreviewTrashSection
                                 key={mindMap._id}
                                 mindMap={mindMap}
                                 changeMindMap={changeMindMap}
+                                deleteMindMap={deleteMindMap}
                             />
                         })}
                     </div> : null}
