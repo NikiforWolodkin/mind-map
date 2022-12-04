@@ -24,8 +24,7 @@ class authController {
             }
             console.log(password)
             const hashPassword = bcrypt.hashSync(password, 4);
-            const user = new User({email, password: hashPassword});
-            console.log(user);
+            const user = new User({email, password: hashPassword, name: email.split("@")[0]});
             await user.save();
             return res.json({message: "Succesfully registered"});
         }
@@ -62,7 +61,7 @@ class authController {
                 return res.status(400).json({message: "User not found", type: 1});
             }
             const mindMaps = await MindMap.find({userId: user._id});
-            return res.json({message: "Successfully fetched", user: {email: user.email}, mindMaps: mindMaps});
+            return res.json({message: "Successfully fetched", user: {email: user.email, name: user.name}, mindMaps: mindMaps});
         }
         catch (e) {
             console.log(e);
@@ -70,13 +69,49 @@ class authController {
     }
 
     async addMindMap(req, res) {
-        const user = await User.findOne({email: req.user.email});
-        if (!user) {
-            return res.status(400).json({message: "User not found", type: 1});
+        try {
+            const user = await User.findOne({email: req.user.email});
+            if (!user) {
+                return res.status(400).json({message: "User not found", type: 1});
+            }
+            const mindMap = new MindMap({userId: user._id});
+            await mindMap.save();
+            return res.json({message: "Succesfully added"});
         }
-        const mindMap = new MindMap({userId: user._id});
-        await mindMap.save();
-        return res.json({message: "Succesfully added"});
+        catch (e) {
+            console.log(e);
+        }
+    }
+
+    async changeMindMap(req, res) {
+        try {
+            const mindMap = await MindMap.findOne({_id: req.body._id});
+            if (!mindMap) {
+                return res.status(400).json({message: "Mind map not found", type: 1});
+            }
+            mindMap.favorited = req.body.favorited;
+            mindMap.markedForDeletion = req.body.markedForDeletion;
+            mindMap.name = req.body.name;
+            await mindMap.save();
+            return res.json({message: "Succesfully changed"});
+        }
+        catch (e) {
+            console.log(e);
+        }
+    }
+
+    async deleteMindMap(req, res) {
+        try {
+            const mindMap = await MindMap.findOne({_id: req.body._id});
+            if (!mindMap) {
+                return res.status(400).json({message: "Mind map not found", type: 1});
+            }
+            await MindMap.deleteOne({_id: req.body._id});
+            return res.json({message: "Succesfully deleted"});
+        }
+        catch (e) {
+            console.log(e);
+        }
     }
 }
 

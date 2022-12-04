@@ -2,8 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { FiFolder, FiStar } from 'react-icons/fi';
 import { MdOutlineSchema } from 'react-icons/md';
-import { FcMindMap, FcFolder } from 'react-icons/fc';
+import { FcMindMap } from 'react-icons/fc';
+import { FaRegTrashAlt } from 'react-icons/fa';
+import { MdClose, MdRefresh } from 'react-icons/md';
 import LoadingSpinner from '../../Components/General/LoadingSpinner';
+import SavingSpinner from '../../Components/General/savingSpinner';
+import BarError from '../../Components/Forms/barError';
 import Search from '../../Components/General/Search';
 import Button from '../../Components/General/Button';
 import ListElement from '../../Components/General/ListElement';
@@ -11,8 +15,11 @@ import CreateButton from '../../Components/General/CreateButton';
 import MindMapPreview from '../../Components/General/MindMapPreview';
 
 function Account(props) {
+    const [error, setError] = useState(null);
+    const [isSaving, setIsSaving] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
-    const [showDropDown, setShowDropDown] = useState(false);
+    const [section, setSection] = useState("recent");
+    const [search, setSearch] = useState("");
     const [user, setUser] = useState("");
     const [mindMaps, setMindMaps] = useState([]);
     const navigate = useNavigate();
@@ -23,7 +30,33 @@ function Account(props) {
         navigate("/login");
     };
 
+    const fetchData = async () => {
+        try {
+            const response = await fetch("/api/auth/user", {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authentication': 'Token ' +  props.token
+                }, 
+            });
+    
+            if (!response.ok) {
+                setError("Ошибка сервера");
+                throw new Error(`GET error, status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            setUser(result.user);
+            setMindMaps(result.mindMaps);
+        }
+        catch (e) {
+            console.log(e);
+        }
+    };
+
     const addNewMindMap = async () => {
+        setIsSaving(true);
+
         try {
             const response = await fetch("/api/auth/addMindMap", {
                 method: 'POST',
@@ -35,8 +68,7 @@ function Account(props) {
             });
     
             if (!response.ok) {
-                props.setGlobalToken();
-                props.setGlobalLoggedIn();
+                setError("Ошибка сервера");
                 throw new Error(`POST error, status: ${response.status}`);
             }
 
@@ -47,30 +79,98 @@ function Account(props) {
             console.log(e);
         }
 
+        await fetchData();
+        setIsSaving(false);
+    };
+
+    const changeMindMap = async mindMap => {
+        setIsSaving(true);
+
         try {
-            const response = await fetch("/api/auth/user", {
-                method: 'GET',
+            const response = await fetch("/api/auth/changeMindMap", {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authentication': 'Token ' +  props.token
                 }, 
+                body: JSON.stringify(mindMap)
             });
     
             if (!response.ok) {
-                props.setGlobalToken();
-                props.setGlobalLoggedIn();
-                throw new Error(`GET error, status: ${response.status}`);
+                setError("Ошибка сервера");
+                throw new Error(`POST error, status: ${response.status}`);
             }
 
             const result = await response.json();
-            setUser(result.user);
-            setMindMaps(result.mindMaps);
         }
         catch (e) {
             console.log(e);
-            navigate("/error");
         }
+        
+        await fetchData();
+        setIsSaving(false);
     };
+
+    const deleteMindMap = async mindMap => {
+        setIsSaving(true);
+
+        try {
+            const response = await fetch("/api/auth/deleteMindMap", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authentication': 'Token ' +  props.token
+                }, 
+                body: JSON.stringify(mindMap)
+            });
+    
+            if (!response.ok) {
+                setError("Ошибка сервера");
+                throw new Error(`POST error, status: ${response.status}`);
+            }
+
+            const result = await response.json();
+        }
+        catch (e) {
+            console.log(e);
+        }
+        
+        await fetchData();
+        setIsSaving(false);
+    };
+
+    const undoDeletes = async () => {
+        setIsSaving(true);
+
+        for (const mindMap of mindMaps) {
+            const mindMapUpdated = mindMap;
+            mindMapUpdated.markedForDeletion = false;
+
+            await changeMindMap(mindMapUpdated);
+        }
+
+        setIsSaving(false);
+    }
+
+    const deleteAll = async () => {
+        setIsSaving(true);
+
+        for (const mindMap of mindMaps) {
+            if (mindMap.markedForDeletion) {
+                await deleteMindMap(mindMap);
+            }
+        }
+
+        setIsSaving(false);
+    }
+
+    const matchesSearch = (name) => {
+        if (search === "") {
+            return true;
+        }
+
+        return name.toUpperCase().includes(search.toUpperCase());
+    }
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -80,7 +180,7 @@ function Account(props) {
                     headers: {
                         'Content-Type': 'application/json',
                         'Authentication': 'Token ' +  props.token
-                    }, 
+                    },
                 });
         
                 if (!response.ok) {
@@ -111,22 +211,50 @@ function Account(props) {
 
     if (props.loggedIn && !isLoading)
     return (
+        <>
+        {error !== null ? <div 
+            className="absolute flex w-full h-0 mt-4 justify-evenly cursor-pointer"
+            onClick={ () => setError(null) }
+        >
+            <BarError text={error} />
+        </div> : null}
+        {isSaving === true ? <div className="absolute flex w-full h-0 mt-4 justify-evenly">
+            <SavingSpinner />
+        </div> : null}
         <div className="flex h-screen">
             <div className="flex flex-col w-80 h-full border-r">
                 <div className="flex items-center w-full h-14 border-gray-300 border-b text-xl">
                     <div className="ml-4">
-                        {user.email}
+                        {user.name}
                     </div>
                 </div>
-                <ListElement text="Последние">
-                    <MdOutlineSchema />
-                </ListElement>
-                <ListElement text="Отмеченные">
-                    <FiStar />
-                </ListElement>
-                <ListElement text="Папки">
-                    <FiFolder />
-                </ListElement>
+                <div onClick={ () => setSection("recent") }>
+                    <ListElement
+                        name="recent"
+                        currentSection={section}
+                        text="Последние"
+                    >
+                        <MdOutlineSchema />
+                    </ListElement>
+                </div>
+                <div onClick={ () => setSection("favorited") }>
+                    <ListElement 
+                        name="favorited"
+                        currentSection={section}
+                        text="Отмеченные"
+                    >
+                        <FiStar />
+                    </ListElement>
+                </div>
+                <div onClick={ () => setSection("trash") }>
+                    <ListElement 
+                        name="trash"
+                        currentSection={section}
+                        text="Корзина"
+                    >
+                        <FaRegTrashAlt />
+                    </ListElement>
+                </div>
             </div>
             <div className="flex flex-col w-full">
                 <div className="shrink-0 flex items-center w-full h-14 border-gray-300 border-b pr-8">
@@ -135,6 +263,8 @@ function Account(props) {
                         name="search"
                         id="search"
                         placeholder="Поиск..."
+                        value={search}
+                        setSearch={setSearch}
                     />
                     <div
                         className="ml-auto"
@@ -145,27 +275,87 @@ function Account(props) {
                 </div>
                 <div className="flex flex-col p-4">
                     <div className="flex pb-4">
-                        <CreateButton 
+                        {section !== "trash" ? <CreateButton 
                             text="Новая интеллект-карта"
                             onClick={addNewMindMap}
                         >
                             <FcMindMap />
-                        </CreateButton>
+                        </CreateButton> : null}
+                        {section === "trash" ? <CreateButton 
+                            text="Очистить корзину"
+                            onClick={deleteAll}
+                        >
+                            <div className="text-red-500">
+                                <MdClose />
+                            </div>
+                        </CreateButton> : null}
+                        {section === "trash" ? <CreateButton 
+                            text="Восстановить все"
+                            onClick={undoDeletes}
+                        >
+                            <div className="text-blue-500">
+                                <MdRefresh />
+                            </div>
+                        </CreateButton> : null}
                     </div>
-                    <div className="flex flex-wrap">
+                    {section === "recent" ? <div className="flex flex-wrap">
                         {mindMaps.map((mindMap) => {
+                            if (mindMap.markedForDeletion) {
+                                return null;
+                            }
+
+                            if (!matchesSearch(mindMap.name)) {
+                                return null;
+                            }
+
                             return <MindMapPreview
                                 key={mindMap._id}
-                                text={mindMap.name}
-                                type="mind-map"
-                                image={null}
-                                updated="1 минуту"
+                                mindMap={mindMap}
+                                changeMindMap={changeMindMap}
                             />
                         })}
-                    </div>
+                    </div> : null}
+                    {section === "favorited" ? <div className="flex flex-wrap">
+                        {mindMaps.map((mindMap) => {
+                            if (mindMap.markedForDeletion) {
+                                return null;
+                            }
+                            if (!mindMap.favorited) {
+                                return null;
+                            }
+
+                            if (!matchesSearch(mindMap.name)) {
+                                return null;
+                            }
+
+                            return <MindMapPreview
+                                key={mindMap._id}
+                                mindMap={mindMap}
+                                changeMindMap={changeMindMap}
+                            />
+                        })}
+                    </div> : null}
+                    {section === "trash" ? <div className="flex flex-wrap">
+                        {mindMaps.map((mindMap) => {
+                            if (!mindMap.markedForDeletion) {
+                                return null;
+                            }
+
+                            if (!matchesSearch(mindMap.name)) {
+                                return null;
+                            }
+
+                            return <MindMapPreview
+                                key={mindMap._id}
+                                mindMap={mindMap}
+                                changeMindMap={changeMindMap}
+                            />
+                        })}
+                    </div> : null}
                 </div>
             </div>
         </div>
+        </>
     );
 }
   

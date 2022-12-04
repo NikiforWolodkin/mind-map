@@ -10,6 +10,8 @@ function Search(props) {
                 id={props.id}
                 className="outline-0"
                 placeholder={props.placeholder}
+                value={props.value}
+                onChange={ e => props.setSearch(e.target.value)}
             />
         </div>
     );
