@@ -35,7 +35,7 @@ function MindMapPreviewTrashSection(props) {
             friendlyTime = Math.floor(delta / hour) + ' часов';
         } else if (delta < day * 2) {
             friendlyTime = 'день';
-        } else if (delta < day * 2 * 30) {
+        } else if (delta < day * 2 * 15) {
             friendlyTime = Math.floor(delta / day) + ' дней';
         } else {
             friendlyTime = 'больше месяца'

@@ -54,7 +54,7 @@ class authController {
         }
     }
 
-    async getUsers(req, res) {
+    async getUser(req, res) {
         try {
             const user = await User.findOne({email: req.user.email});
             if (!user) {
@@ -62,6 +62,19 @@ class authController {
             }
             const mindMaps = await MindMap.find({userId: user._id});
             return res.json({message: "Successfully fetched", user: {email: user.email, name: user.name}, mindMaps: mindMaps});
+        }
+        catch (e) {
+            console.log(e);
+        }
+    }
+
+    async getMindMap(req, res) {
+        try {
+            const mindMap = await MindMap.findOne({_id: req.body._id});
+            if (!mindMap) {
+                return res.status(400).json({message: "Mind map not found", type: 1});
+            }
+            return res.json({message: "Successfully fetched", mindMap: mindMap});
         }
         catch (e) {
             console.log(e);
@@ -92,6 +105,10 @@ class authController {
             mindMap.favorited = req.body.favorited;
             mindMap.markedForDeletion = req.body.markedForDeletion;
             mindMap.name = req.body.name;
+            mindMap.tabs = req.body.tabs;
+            mindMap.lines = req.body.lines;
+            mindMap.markModified('tabs');
+            mindMap.markModified('lines');
             await mindMap.save();
             return res.json({message: "Succesfully changed"});
         }

@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { Navigate, useNavigate } from 'react-router-dom';
+import LoadingSpinner from './Components/General/LoadingSpinner';
 import Line from './WorkspaceComponents/line';
 import Tab from './WorkspaceComponents/tab';
 import Search from './UIComponents/search';
@@ -9,10 +11,14 @@ import SaveBar from "./Components/UI/saveBar";
 import SearchBar from "./Components/UI/searchBar";
 import "./mind-map.css";
 
-export default function Root() {
+export default function Root(props) {
+    const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(true);
+    const [mindMap, setMindMap] = useState(null);
+
     const [updater, update] = useState(true);
     const [tabs, setTabs] = useState(
-        JSON.parse(localStorage.getItem('tabs')) || [{
+        [{
         id: "id" + Math.random().toString(16).slice(2),
         text: "Новая диаграмма",
         x: parseInt(window.innerWidth / 2 - 131),
@@ -27,8 +33,8 @@ export default function Root() {
         },
         type: "input",
     }]);
-    const [lines, setLines] = useState(JSON.parse(localStorage.getItem('lines')) || []);
-    const [theme, setTheme] = useState(JSON.parse(localStorage.getItem('theme')) || "gradBlue");
+    const [lines, setLines] = useState([]);
+    const [theme, setTheme] = useState("gradBlue");
     const [tabFocus, setTabFocus] = useState("none");
     const handleTextChange = (id, text) => {
         let tabsUpdated = tabs;
@@ -128,7 +134,20 @@ export default function Root() {
         });
         setLines(linesUpdated);
         update(prevUpdater => !prevUpdater);
-        localStorage.setItem('tabs', JSON.stringify(tabs));
+    };
+    const updateTabPosition = (id, x, y) => {
+        let tabsUpdated = tabs.map(element => {
+            if (element.id !== id) {
+                return element;
+            }
+
+            let elementUpdated = element;
+            element.x = x;
+            element.y = y;
+            return elementUpdated; 
+        });
+        setTabs(tabsUpdated);
+        update(prevUpdater => !prevUpdater);
     };
     const removeTabFocus = () => setTabFocus("none");
     const removeTab = (id) => {
@@ -139,7 +158,6 @@ export default function Root() {
             (element.idFirst !== id) && (element.idSecond !== id)
         ));
         removeTabFocus();
-        localStorage.removeItem(id);
     };
     const changeStyle = (id, prop, value) => {
         let tabsUpdated = tabs;
@@ -171,22 +189,83 @@ export default function Root() {
         setTabFocus("none");
         setTheme("gradBlue");
         update(prevUpdater => !prevUpdater);
-        localStorage.clear();
+    };
+
+    const changeMindMap = async mindMapToSave => {
+        try {
+            const response = await fetch("/api/auth/changeMindMap", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authentication': 'Token ' +  props.token
+                }, 
+                body: JSON.stringify(mindMapToSave)
+            });
+    
+            if (!response.ok) {
+                // setError("Ошибка сервера");
+                throw new Error(`POST error, status: ${response.status}`);
+            }
+
+            const result = await response.json();
+        }
+        catch (e) {
+            console.log(e);
+        }
+    };
+
+    const saveMindMap = async () => {
+        update(prevUpdater => !prevUpdater);
+
+        const mindMapUpdated = mindMap;
+        mindMapUpdated.tabs = tabs;
+        mindMapUpdated.lines = lines;
+        mindMapUpdated.theme = theme;
+
+        await changeMindMap(mindMapUpdated);
+
+        navigate("/account");
     };
 
     useEffect(() => {
-        localStorage.setItem('tabs', JSON.stringify(tabs));
-        if (tabs.length === 0) {
-            localStorage.clear();
-        }
-    }, [tabs, updater]);
-    useEffect(() => {
-        localStorage.setItem('lines', JSON.stringify(lines));
-    }, [lines, updater]);
-    useEffect(() => {
-        localStorage.setItem('theme', JSON.stringify(theme));
-    }, [theme]);
+        const fetchUser = async () => {
+            try {
+                const response = await fetch("/api/auth/mindMap", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authentication': 'Token ' +  props.token
+                    },
+                    body: JSON.stringify({_id: props.mindMapId})
+                });
+        
+                if (!response.ok) {
+                    props.setGlobalToken();
+                    props.setGlobalLoggedIn();
+                    throw new Error(`GET error, status: ${response.status}`);
+                }
+    
+                const result = await response.json();
+                setMindMap(result.mindMap)
+                setTabs(result.mindMap.tabs);
+                setLines(result.mindMap.lines);
+                setTheme(result.mindMap.theme);
+                setIsLoading(false);
+            }
+            catch (e) {
+                console.log(e);
+                navigate("/error");
+            }
+        };
+        
+        fetchUser().catch(console.error);
+    }, []);
 
+    if (!props.loggedIn)
+    return <Navigate to="/error" />;
+
+    if (props.loggedIn && isLoading)
+    return <LoadingSpinner />;
 
     return (
         <div>
@@ -205,9 +284,13 @@ export default function Root() {
                 clearTabs={clearTabs}
             /> */}
 
-            <SaveBar />
+            <SaveBar 
+                saveMindMap={saveMindMap}
+            />
 
-            <SearchBar />
+            <SearchBar 
+                addRootTab={addRootTab}
+            />
 
             <ToolBar />
 
@@ -253,6 +336,7 @@ export default function Root() {
                     focus={element.focus}
                     addTab={addTab}
                     updateLines={updateLines}
+                    updateTabPosition={updateTabPosition}
                     handleTextChange={handleTextChange}
                     removeFocus={removeFocus}
                     theme={theme}

@@ -32,8 +32,7 @@ const Tab = React.memo(function Tab(props) {
     const inputRef = useRef(null);
     const initialPosition = { x: props.x, y: props.y };
     const [hover, setHover] = useState({ display: "none" });
-    const [position, setPosition] = useState(
-        JSON.parse(localStorage.getItem(props.id)) || {
+    const [position, setPosition] = useState({
         x: initialPosition.x,
         y: initialPosition.y,
     });
@@ -43,6 +42,7 @@ const Tab = React.memo(function Tab(props) {
           y: params.offset[1],
         });
         props.updateLines(props.id, params.offset[0], params.offset[1]);
+        props.updateTabPosition(props.id, params.offset[0], params.offset[1]);
         if (props.tabFocus !== props.id) {
             props.setTabFocus(props.id);
         }
@@ -62,9 +62,6 @@ const Tab = React.memo(function Tab(props) {
             props.removeFocus();
         }
     }, [props.focus]);
-    useEffect(() => {
-        localStorage.setItem(props.id, JSON.stringify(position));
-    }, [position]);
   
     return (
         <animated.div

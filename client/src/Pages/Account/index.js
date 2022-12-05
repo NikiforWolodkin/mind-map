@@ -193,7 +193,16 @@ function Account(props) {
     
                 const result = await response.json();
                 setUser(result.user);
-                setMindMaps(result.mindMaps);
+                setMindMaps(result.mindMaps.sort((a, b) => {
+                    if (a.lastAccessTime > b.lastAccessTime) {
+                        return -1;
+                    }
+                    if (a.lastAccessTime < b.lastAccessTime) {
+                        return 1;
+                    }
+
+                    return 0;
+                }));
                 setIsLoading(false);
             }
             catch (e) {
@@ -319,6 +328,7 @@ function Account(props) {
                             return <MindMapPreview
                                 key={mindMap._id}
                                 mindMap={mindMap}
+                                setMindMapId={props.setMindMapId}
                                 changeMindMap={changeMindMap}
                             />
                         })}
@@ -339,6 +349,7 @@ function Account(props) {
                             return <MindMapPreview
                                 key={mindMap._id}
                                 mindMap={mindMap}
+                                setMindMapId={props.setMindMapId}
                                 changeMindMap={changeMindMap}
                             />
                         })}

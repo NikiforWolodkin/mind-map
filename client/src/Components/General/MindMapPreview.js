@@ -34,7 +34,7 @@ function MindMapPreview(props) {
             friendlyTime = Math.floor(delta / hour) + ' часов';
         } else if (delta < day * 2) {
             friendlyTime = 'день';
-        } else if (delta < day * 2 * 30) {
+        } else if (delta < day * 2 * 15) {
             friendlyTime = Math.floor(delta / day) + ' дней';
         } else {
             friendlyTime = 'больше месяца'
@@ -86,6 +86,7 @@ function MindMapPreview(props) {
             onMouseLeave={() => setHover(false)}
             onClick={ () => {
                 if (!isTyping) {
+                    props.setMindMapId(props.mindMap._id);
                     navigate("/mindmap");
                 }
             }}

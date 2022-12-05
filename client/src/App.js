@@ -11,6 +11,7 @@ function App() {
   const [registered, setRegistered] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [token, setToken] = useState("");
+  const [mindMapId, setMindMapId] = useState("");
 
   return (
     <Routes>
@@ -36,13 +37,18 @@ function App() {
         <Account
           loggedIn={loggedIn}
           token={token}
+          setMindMapId={setMindMapId}
           setGlobalToken={ () => setToken("") }
           setGlobalLoggedIn={ () => setLoggedIn(false) }
         />
       } />
       <Route path="/mindmap" element={
         <MindMap
-          
+          loggedIn={loggedIn}
+          token={token}
+          mindMapId={mindMapId}
+          setGlobalToken={ () => setToken("") }
+          setGlobalLoggedIn={ () => setLoggedIn(false) }
         />
       } />
     </Routes>
