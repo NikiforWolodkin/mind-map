@@ -4,7 +4,6 @@ function LoadingSpinner() {
     return (
         <div className="flex flex-row min-h-screen justify-center items-center">
             <Oval
-                className="bg-red-500"
                 height={80}
                 width={80}
                 color="grey"

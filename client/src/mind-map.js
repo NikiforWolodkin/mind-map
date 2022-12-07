@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { Navigate, useNavigate } from 'react-router-dom';
 import LoadingSpinner from './Components/General/LoadingSpinner';
-import Line from './WorkspaceComponents/line';
-import Tab from './WorkspaceComponents/tab';
+import SavingSpinner from './Components/General/savingSpinner';
+import BarError from './Components/Forms/barError';
+import Line from './Components/UI/line';
+import Tab from './Components/UI/tab';
 import Search from './UIComponents/search';
 import AddButton from "./UIComponents/addButton";
 import ClearButton from "./UIComponents/clearButton";
@@ -13,6 +15,9 @@ import "./mind-map.css";
 
 export default function Root(props) {
     const navigate = useNavigate();
+    const [timer, setTimer] = useState(0);
+    const [error, setError] = useState(null);
+    const [isSaving, setIsSaving] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [mindMap, setMindMap] = useState(null);
 
@@ -21,7 +26,7 @@ export default function Root(props) {
         [{
         id: "id" + Math.random().toString(16).slice(2),
         text: "Новая диаграмма",
-        x: parseInt(window.innerWidth / 2 - 131),
+        x: parseInt(window.innerWidth / 2 - 144),
         y: parseInt(window.innerHeight / 2 - 150),
         focus: true,
         style: {
@@ -75,7 +80,7 @@ export default function Root(props) {
         setTabs([...tabs, {
             id: id,
             text: '',
-            x: parseInt((window.innerWidth / 2) - 131),
+            x: parseInt((window.innerWidth / 2) - 144),
             y: parseInt((window.innerHeight / 2) - 60),
             focus: true,
             style: {
@@ -95,8 +100,8 @@ export default function Root(props) {
         setTabs([...tabs, {
             id: idNew,
             text: text,
-            x: xNew > 0 ? ((window.innerWidth - 262) > xNew ? xNew : (window.innerWidth - 262)) : 0,
-            y: yNew > 0 ? ((window.innerHeight - 78) > yNew ? yNew : (window.innerHeight - 78)) : 0,
+            x: xNew > 0 ? ((window.innerWidth - 300) > xNew ? xNew : (window.innerWidth - 300)) : 0,
+            y: yNew > 0 ? ((window.innerHeight - 90) > yNew ? yNew : (window.innerHeight - 90)) : 0,
             focus: true,
             style: {
                 fontFamily: "'Montserrat', sans-serif",
@@ -112,8 +117,8 @@ export default function Root(props) {
             xFirst: x,
             yFirst: y,
             idSecond: idNew,
-            xSecond: xNew > 0 ? ((window.innerWidth - 262) > xNew ? xNew : (window.innerWidth - 262)) : 0,
-            ySecond: yNew > 0 ? ((window.innerHeight - 78) > yNew ? yNew : (window.innerHeight - 78)) : 0,
+            xSecond: xNew > 0 ? ((window.innerWidth - 300) > xNew ? xNew : (window.innerWidth - 300)) : 0,
+            ySecond: yNew > 0 ? ((window.innerHeight - 90) > yNew ? yNew : (window.innerHeight - 90)) : 0,
         }]);
         setTabFocus(idNew);
     };
@@ -203,18 +208,21 @@ export default function Root(props) {
             });
     
             if (!response.ok) {
-                // setError("Ошибка сервера");
                 throw new Error(`POST error, status: ${response.status}`);
             }
 
             const result = await response.json();
+            return true;
         }
         catch (e) {
             console.log(e);
+            return false;
         }
     };
 
     const saveMindMap = async () => {
+        setIsSaving(true);
+
         update(prevUpdater => !prevUpdater);
 
         const mindMapUpdated = mindMap;
@@ -222,9 +230,14 @@ export default function Root(props) {
         mindMapUpdated.lines = lines;
         mindMapUpdated.theme = theme;
 
-        await changeMindMap(mindMapUpdated);
-
-        navigate("/account");
+        const result = await changeMindMap(mindMapUpdated);
+        
+        if (result) {
+            navigate("/account");
+        }
+        else {
+            setError("Ошибка сервера");
+        }
     };
 
     useEffect(() => {
@@ -261,6 +274,37 @@ export default function Root(props) {
         fetchUser().catch(console.error);
     }, []);
 
+    useEffect(() => {
+        const save = async () => {
+            update(prevUpdater => !prevUpdater);
+
+            const mindMapUpdated = mindMap;
+            mindMapUpdated.tabs = tabs;
+            mindMapUpdated.lines = lines;
+            mindMapUpdated.theme = theme;
+
+            const result = await changeMindMap(mindMapUpdated);
+
+            if (!result) {
+                setError("Ошибка сервера")
+            }
+        }
+
+        if (timer >= 10) {
+            save();
+            setTimer((prevTimer) => 0);
+        }
+
+    }, [tabs]);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setTimer((prevTimer) => prevTimer + 1);
+        }, 1000);
+    
+        return () => clearInterval(interval);
+    }, []);
+
     if (!props.loggedIn)
     return <Navigate to="/error" />;
 
@@ -269,6 +313,16 @@ export default function Root(props) {
 
     return (
         <div>
+            {error !== null ? <div 
+                className="absolute flex w-full h-0 mt-4 justify-evenly cursor-pointer z-10"
+                onClick={ () => setError(null) }
+            >
+                <BarError text={error} />
+            </div> : null}
+            {isSaving === true ? <div className="absolute flex w-full h-0 mt-4 justify-evenly">
+                <SavingSpinner />
+            </div> : null}
+
             <div
                 style={{
                     width: window.innerWidth,
@@ -284,15 +338,20 @@ export default function Root(props) {
                 clearTabs={clearTabs}
             /> */}
 
-            <SaveBar 
+            <SaveBar
+                theme={theme}
                 saveMindMap={saveMindMap}
+                clearTabs={clearTabs}
             />
 
             <SearchBar 
+                theme={theme}
                 addRootTab={addRootTab}
             />
 
-            <ToolBar />
+            <ToolBar 
+                theme={theme}
+            />
 
             {/* <AddButton
                 addRootTab={addRootTab}

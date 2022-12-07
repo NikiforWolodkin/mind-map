@@ -1,18 +1,16 @@
 import React from 'react';
-import styles from '../styles';
+import themes from './themes';
 
 const Line = React.memo(function Line(props) {
-    const style = styles.find(element =>
+    const theme = themes.find(element => 
         element.name === props.theme
-    ).color;
+    );
 
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg" 
-            height={window.innerHeight}
-            width={window.innerWidth}
+            className={"absolute h-screen w-screen " + theme.color}
             style={{
-                position: 'absolute',
                 top: 0,
                 left: 0,
                 zIndex: "-999"
@@ -31,7 +29,7 @@ const Line = React.memo(function Line(props) {
             + (props.ySecond + 48) + ' ' +
             + (props.xSecond + 144) + ' ' + 
             + (props.ySecond + 48)}
-            stroke={style} strokeWidth="4" fill="none" />
+            stroke="currentColor" strokeWidth="4" fill="none" />
         </svg>
     );
 });

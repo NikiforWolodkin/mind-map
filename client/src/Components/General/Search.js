@@ -1,9 +1,23 @@
 import { BsSearch } from 'react-icons/bs';
+import themes from '../UI/themes';
 
 function Search(props) {
+    let theme = themes.find(element => {
+        if (element.name === props.theme) {
+            return true;
+        }
+
+        return false;
+    });
+    if (theme === undefined) {
+        theme = { color: "text-blue-600" }
+    }
+
     return (
         <div className="flex items-center px-4 py-2 outline-0 rounded-md text-xl focus:border-blue-500 cursor-pointer">
-            <BsSearch className="mr-2 relative"/>
+            <div className={"mr-2 relative hover:" + theme.color}>
+                <BsSearch />
+            </div>
             <input
                 type={props.type}
                 name={props.name}

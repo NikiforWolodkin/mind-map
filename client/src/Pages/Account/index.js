@@ -310,7 +310,7 @@ function Account(props) {
                             text="Восстановить все"
                             onClick={undoDeletes}
                         >
-                            <div className="text-blue-500">
+                            <div className="text-blue-600">
                                 <MdRefresh />
                             </div>
                         </CreateButton> : null}
