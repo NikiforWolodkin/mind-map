@@ -20,6 +20,7 @@ export default function Root(props) {
     const [isSaving, setIsSaving] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [mindMap, setMindMap] = useState(null);
+    const [tool, setTool] = useState(null);
 
     const [updater, update] = useState(true);
     const [tabs, setTabs] = useState(
@@ -54,6 +55,16 @@ export default function Root(props) {
         update(prevUpdater => !prevUpdater);
     };
     const setFocus = (id) => {
+        if (tool === "connections-delete" && tabFocus !== "none" && tabFocus !== id) {
+            console.log(tabFocus, id)
+            setLines(lines.filter(element =>
+                (element.idFirst !== id) || (element.idSecond !== tabFocus)
+            ));
+            setLines(lines.filter(element =>
+                (element.idFirst !== tabFocus) || (element.idSecond !== id)
+            ));
+        }
+
         let tabsUpdated = tabs;
         const index = tabsUpdated.findIndex(element =>
             element.id === id
@@ -330,7 +341,10 @@ export default function Root(props) {
                     position: "fixed",
                     zIndex: "0",
                 }}
-                onClick={ () => removeTabFocus() }
+                onClick={ () =>{
+                    removeTabFocus();
+                    setTool(null);
+                }}
             ></div>
 
             {/* <ClearButton
@@ -351,6 +365,10 @@ export default function Root(props) {
 
             <ToolBar 
                 theme={theme}
+                tool={tool}
+                setTool={setTool}
+                tabFocus={tabFocus}
+                removeTab={removeTab}
             />
 
             {/* <AddButton
@@ -400,7 +418,7 @@ export default function Root(props) {
                     removeFocus={removeFocus}
                     theme={theme}
                     tabFocus={tabFocus}
-                    setTabFocus={setTabFocus}
+                    setTabFocus={ () => setFocus(element.id) }
                     style={element.style}
                     type={element.type}
                 />
