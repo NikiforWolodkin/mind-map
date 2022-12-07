@@ -77,7 +77,7 @@ const Tab = React.memo(function Tab(props) {
                     </div>
                 }
                 {props.type !== "connector" &&
-                    <div className={"flex items-center w-60 p-1 rounded " + theme.background + " "
+                    <div className={"flex items-center w-60 p-1 rounded shadow-2xl " + theme.background + " "
                         + (props.type === "textarea" ? "h-48 " : "h-10 ")
                         + (props.tabFocus === props.id ? "outline outline-offset-1 outline-3 outline-blue-600" : "")
                     }>

@@ -2,6 +2,7 @@ import { BsBrush } from 'react-icons/bs';
 import { AiOutlineSetting, AiOutlineArrowsAlt } from 'react-icons/ai';
 import { MdColorLens } from 'react-icons/md';
 import { CgClose } from 'react-icons/cg';
+import Connections from './Tools/connections';
 import themes from './themes';
 
 function ToolBar(props) {
@@ -34,7 +35,7 @@ function ToolBar(props) {
                         if (props.tabFocus !== "none") {
                             props.removeTab(props.tabFocus);
                             if (props.tool === "connections") {
-                                props.setTool(null)
+                                props.setTool("none")
                             }
                         }
                     }}
@@ -42,7 +43,7 @@ function ToolBar(props) {
                     <CgClose />
                 </div>
                 <div 
-                    className={"cursor-pointer " + (props.tool === "connections" ? theme.color : "") + " hover:" + theme.color}
+                    className={"cursor-pointer " + (props.tool.split("-")[0] === "connections" ? theme.color : "") + " hover:" + theme.color}
                     onClick={ () => props.setTool("connections")}    
                 >
                     <AiOutlineArrowsAlt />
@@ -54,8 +55,13 @@ function ToolBar(props) {
                     <MdColorLens />
                 </div>
             </div>
+
+            {props.tool.split("-")[0] === "connections" ? <Connections 
+                theme={theme}
+                tool={props.tool}
+                setTool={props.setTool}
+            /> : null}
         </div>
-        
     );
 }
 export default ToolBar;

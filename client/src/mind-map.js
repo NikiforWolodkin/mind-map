@@ -20,7 +20,7 @@ export default function Root(props) {
     const [isSaving, setIsSaving] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [mindMap, setMindMap] = useState(null);
-    const [tool, setTool] = useState(null);
+    const [tool, setTool] = useState("none");
 
     const [updater, update] = useState(true);
     const [tabs, setTabs] = useState(
@@ -56,13 +56,30 @@ export default function Root(props) {
     };
     const setFocus = (id) => {
         if (tool === "connections-delete" && tabFocus !== "none" && tabFocus !== id) {
-            console.log(tabFocus, id)
             setLines(lines.filter(element =>
                 (element.idFirst !== id) || (element.idSecond !== tabFocus)
             ));
             setLines(lines.filter(element =>
                 (element.idFirst !== tabFocus) || (element.idSecond !== id)
             ));
+        }
+        if (tool === "connections-add" && tabFocus !== "none" && tabFocus !== id) {
+            const line = lines.find(element =>
+                ((element.idFirst === id) && (element.idSecond === tabFocus)) ||
+                ((element.idFirst === tabFocus) && (element.idSecond === id))
+            );
+            if (line === undefined) {
+                const tabFirst = tabs.find(element => element.id === tabFocus);
+                const tabSecond = tabs.find(element => element.id === id);
+                setLines([...lines, {
+                    idFirst: tabFocus,
+                    xFirst: tabFirst.x,
+                    yFirst: tabFirst.y,
+                    idSecond: id,
+                    xSecond: tabSecond.x,
+                    ySecond: tabSecond.y,
+                }]);
+            }
         }
 
         let tabsUpdated = tabs;
@@ -343,7 +360,7 @@ export default function Root(props) {
                 }}
                 onClick={ () =>{
                     removeTabFocus();
-                    setTool(null);
+                    setTool("none");
                 }}
             ></div>
 
@@ -394,7 +411,7 @@ export default function Root(props) {
 
             {lines.map(element => (
                 <Line
-                    key={element.idSecond}
+                    key={element.idSecond + element.idFirst}
                     xFirst={element.xFirst}
                     yFirst={element.yFirst}
                     xSecond={element.xSecond}
