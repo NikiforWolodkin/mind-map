@@ -3,12 +3,18 @@ import { AiOutlineSetting, AiOutlineArrowsAlt } from 'react-icons/ai';
 import { MdColorLens } from 'react-icons/md';
 import { CgClose } from 'react-icons/cg';
 import Connections from './Tools/connections';
+import Theme from './Tools/theme';
+import Settings from './Tools/settings';
+import Customization from './Tools/customization';
 import themes from './themes';
 
 function ToolBar(props) {
-    const theme = themes.find(element => 
+    const theme = Object.assign({}, themes.find(element => 
         element.name === props.theme
-    );
+    ));
+    if (theme.name === "black" || theme.name === "gradBlack") {
+        theme.color = "text-blue-600"
+    }
 
     return (
         <div className="absolute flex items-center h-screen">
@@ -60,6 +66,16 @@ function ToolBar(props) {
                 theme={theme}
                 tool={props.tool}
                 setTool={props.setTool}
+            /> : null}
+            {props.tool === "themes" ? <Theme setTheme={props.setTheme} /> : null}
+            {(props.tool === "settings" && props.tabFocus !== "none") ? <Settings 
+                changeType={props.changeType} 
+                tabFocus={props.tabFocus}
+            /> : null}
+            {props.tool === "customization" ? <Customization 
+                theme={theme}
+                changeStyle={props.changeStyle}
+                tabFocus={props.tabFocus}
             /> : null}
         </div>
     );

@@ -9,10 +9,10 @@ const Line = React.memo(function Line(props) {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg" 
-            className={"absolute h-screen w-screen " + theme.color}
+            className={"absolute h-full w-full " + theme.color}
             style={{
-                top: 0,
-                left: 0,
+                width: window.innerWidth + window.pageXOffset,
+                height: window.innerHeight + window.pageYOffset,
                 zIndex: "-999"
             }}
         >

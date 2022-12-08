@@ -71,6 +71,8 @@ class authController {
     async getMindMap(req, res) {
         try {
             const mindMap = await MindMap.findOne({_id: req.body._id});
+            mindMap.lastAccessTime = new Date();
+            mindMap.save();
             if (!mindMap) {
                 return res.status(400).json({message: "Mind map not found", type: 1});
             }
@@ -107,6 +109,7 @@ class authController {
             mindMap.name = req.body.name;
             mindMap.tabs = req.body.tabs;
             mindMap.lines = req.body.lines;
+            mindMap.theme = req.body.theme;
             mindMap.markModified('tabs');
             mindMap.markModified('lines');
             await mindMap.save();

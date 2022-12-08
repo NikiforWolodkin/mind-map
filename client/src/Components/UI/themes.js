@@ -1,39 +1,35 @@
 const themes = [{
     name: "black",
-    color: "black",
-    background: "black",
+    color: "text-black",
+    background: "bg-black",
 }, {
     name: "green",
-    color: "#3EC70B",
-    background: "#3EC70B",
+    color: "text-green-500",
+    background: "bg-green-500",
 }, {
     name: "orange",
-    color: "#FF9F29",
-    background: "#FF9F29",
+    color: "text-amber-500",
+    background: "bg-amber-500",
 }, {
     name: "purple",
-    color: "#541690",
-    background: "#541690",
-}, {
-    name: "purple",
-    color: "#541690",
-    background: "#541690",
+    color: "text-purple-600",
+    background: "bg-purple-600",
 }, {
     name: "gradBlue",
     color: "text-blue-500",
     background: "bg-gradient-to-r from-cyan-500 to-blue-500",
 }, {
     name: "gradRed",
-    color: "red",
-    background: "linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%)",
+    color: "text-red-500",
+    background: "bg-gradient-to-r from-amber-500 via-red-500 to-violet-500",
 }, {
     name: "gradBlack",
-    color: "#203a43",
-    background: "linear-gradient(to right, #0f2027, #203a43, #2c5364)",
+    color: "text-slate-800",
+    background: "bg-gradient-to-r from-black to-slate-600",
 }, {
     name: "gradPurple",
-    color: "#fc00ff",
-    background: "linear-gradient(to right, #fc00ff, #00dbde)",
+    color: "text-fuchsia-500",
+    background: "bg-gradient-to-r from-fuchsia-500 to-cyan-400",
 }];
 
 export default themes;

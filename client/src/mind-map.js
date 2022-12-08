@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Navigate, useNavigate } from 'react-router-dom';
+import { animated } from "react-spring";
 import LoadingSpinner from './Components/General/LoadingSpinner';
 import SavingSpinner from './Components/General/savingSpinner';
 import BarError from './Components/Forms/barError';
@@ -31,11 +32,9 @@ export default function Root(props) {
         y: parseInt(window.innerHeight / 2 - 150),
         focus: true,
         style: {
-            fontFamily: "'Montserrat', sans-serif",
-            fontWeight: "500",
-            fontStyle: "regular",
+            font: "",
             background: "theme",
-            fill: "fill",
+            fill: "bg-white",
         },
         type: "input",
     }]);
@@ -112,11 +111,9 @@ export default function Root(props) {
             y: parseInt((window.innerHeight / 2) - 60),
             focus: true,
             style: {
-                fontFamily: "'Montserrat', sans-serif",
-                fontWeight: "500",
-                fontStyle: "normal",
+                font: "",
                 background: "theme",
-                fill: "noFill",
+                fill: "bg-white",
             },
             type: "input",
         }]);
@@ -132,11 +129,9 @@ export default function Root(props) {
             y: yNew > 0 ? ((window.innerHeight - 90) > yNew ? yNew : (window.innerHeight - 90)) : 0,
             focus: true,
             style: {
-                fontFamily: "'Montserrat', sans-serif",
-                fontWeight: "500",
-                fontStyle: "normal",
+                font: "",
                 background: "theme",
-                fill: "noFill",
+                fill: "bg-white",
             },
             type: "input",
         }]);
@@ -332,6 +327,7 @@ export default function Root(props) {
     
         return () => clearInterval(interval);
     }, []);
+    console.log(window.pageXOffset)
 
     if (!props.loggedIn)
     return <Navigate to="/error" />;
@@ -364,50 +360,31 @@ export default function Root(props) {
                 }}
             ></div>
 
-            {/* <ClearButton
-                theme={theme}
-                clearTabs={clearTabs}
-            /> */}
-
-            <SaveBar
-                theme={theme}
-                saveMindMap={saveMindMap}
-                clearTabs={clearTabs}
-            />
-
-            <SearchBar 
-                theme={theme}
-                addRootTab={addRootTab}
-            />
-
-            <ToolBar 
-                theme={theme}
-                tool={tool}
-                setTool={setTool}
-                tabFocus={tabFocus}
-                removeTab={removeTab}
-            />
-
-            {/* <AddButton
-                addRootTab={addRootTab}
-                theme={theme}
-            /> */}
-
-            {/* <Search 
-                tabs={tabs}
-                setFocus={setFocus}
-                theme={theme}
-            /> */}
-
-            {/* <ToolBar
-                setTheme={setTheme}
-                theme={theme}
-                tabFocus={tabFocus}
-                tabs={tabs}
-                removeTab={removeTab}
-                changeStyle={changeStyle}
-                changeType={changeType}
-            /> */}
+            <div
+                className="fixed"
+            >
+                <SaveBar
+                    theme={theme}
+                    saveMindMap={saveMindMap}
+                    clearTabs={clearTabs}
+                />
+    
+                <SearchBar 
+                    theme={theme}
+                    addRootTab={addRootTab}
+                />
+    
+                <ToolBar 
+                    theme={theme}
+                    tool={tool}
+                    setTool={setTool}
+                    tabFocus={tabFocus}
+                    removeTab={removeTab}
+                    setTheme={setTheme}
+                    changeType={changeType}
+                    changeStyle={changeStyle}
+                />
+            </div>
 
             {lines.map(element => (
                 <Line

@@ -4,9 +4,12 @@ import { FaTrash } from 'react-icons/fa';
 import themes from './themes';
 
 function SaveBar(props) {
-    const theme = themes.find(element => 
+    const theme = Object.assign({}, themes.find(element => 
         element.name === props.theme
-    );
+    ));
+    if (theme.name === "black" || theme.name === "gradBlack") {
+        theme.color = "text-blue-600"
+    }
 
     return (
         <div className="absolute flex items-center justify-evenly w-40 h-14 shadow-2xl rounded-full m-4 text-xl z-50 bg-white">
