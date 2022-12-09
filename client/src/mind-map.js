@@ -6,13 +6,9 @@ import SavingSpinner from './Components/General/savingSpinner';
 import BarError from './Components/Forms/barError';
 import Line from './Components/UI/line';
 import Tab from './Components/UI/tab';
-import Search from './UIComponents/search';
-import AddButton from "./UIComponents/addButton";
-import ClearButton from "./UIComponents/clearButton";
 import ToolBar from "./Components/UI/toolBar";
 import SaveBar from "./Components/UI/saveBar";
 import SearchBar from "./Components/UI/searchBar";
-import "./mind-map.css";
 
 export default function Root(props) {
     const navigate = useNavigate();
@@ -388,6 +384,7 @@ export default function Root(props) {
                     setTheme={setTheme}
                     changeType={changeType}
                     changeStyle={changeStyle}
+                    removeTabFocus={removeTabFocus}
                 />
             </div>
 

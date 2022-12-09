@@ -1,9 +1,11 @@
 import { useState, useRef } from "react";
 import { BsSearch } from 'react-icons/bs';
 import themes from '../UI/themes';
+import useWindowDimensions from '../../useWindowDimensions';
 
 function Search(props) {
     const inputRef = useRef(null);
+    const { height, width } = useWindowDimensions();
 
     let theme = themes.find(element => {
         if (element.name === props.theme) {
@@ -32,7 +34,7 @@ function Search(props) {
                 type={props.type}
                 name={props.name}
                 id={props.id}
-                className="outline-0"
+                className={"outline-0 " + (parseInt(width) < 600 ? "w-48" : "")}
                 placeholder={props.placeholder}
                 value={props.value}
                 onChange={ e => props.setSearch(e.target.value)}

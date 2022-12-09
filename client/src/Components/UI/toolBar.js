@@ -17,7 +17,7 @@ function ToolBar(props) {
     }
 
     return (
-        <div className="absolute flex items-center h-screen">
+        <div className="absolute flex items-center h-screen z-0">
             <div className="flex flex-col items-center justify-evenly w-14 h-60 shadow-2xl rounded-full ml-4 text-2xl z-50 bg-white">
                 <div 
                     className={"cursor-pointer " + (props.tool === "customization" ? theme.color : "") + " "
@@ -72,7 +72,7 @@ function ToolBar(props) {
                 changeType={props.changeType} 
                 tabFocus={props.tabFocus}
             /> : null}
-            {props.tool === "customization" ? <Customization 
+            {(props.tool === "customization" && props.tabFocus !== "none") ? <Customization 
                 theme={theme}
                 changeStyle={props.changeStyle}
                 tabFocus={props.tabFocus}

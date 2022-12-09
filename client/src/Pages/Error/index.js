@@ -13,7 +13,7 @@ function Error() {
                 Ошибка!
             </div>
             <div
-                className="text-lg my-1"
+                className="text-lg my-1 text-center"
             >
                 Страница не существует или у вас недостаточно прав. <Link to="/login"><HTMLLink>На главную</HTMLLink></Link>
             </div>

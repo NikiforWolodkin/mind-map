@@ -81,7 +81,7 @@ function MindMapPreview(props) {
 
     return (
         <div 
-            className="flex flex-col w-80 h-64 mr-4 mb-4 border rounded-md tracking-tight text-xl cursor-pointer shadow"
+            className="flex flex-col w-80 h-64 mx-2 mb-4 border rounded-md tracking-tight text-xl cursor-pointer shadow"
             onMouseEnter={() => setHover(true)}
             onMouseLeave={() => setHover(false)}
             onClick={ () => {
