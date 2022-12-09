@@ -75,7 +75,6 @@ function Account(props) {
             }
 
             const result = await response.json();
-            console.log(result);
         }
         catch (e) {
             console.log(e);

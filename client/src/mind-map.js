@@ -21,7 +21,9 @@ export default function Root(props) {
     const [isSaving, setIsSaving] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [mindMap, setMindMap] = useState(null);
+
     const [tool, setTool] = useState("none");
+    const [search, setSearch] = useState("");
 
     const [updater, update] = useState(true);
     const [tabs, setTabs] = useState(
@@ -327,7 +329,6 @@ export default function Root(props) {
     
         return () => clearInterval(interval);
     }, []);
-    console.log(window.pageXOffset)
 
     if (!props.loggedIn)
     return <Navigate to="/error" />;
@@ -361,7 +362,7 @@ export default function Root(props) {
             ></div>
 
             <div
-                className="fixed"
+                className="fixed z-50"
             >
                 <SaveBar
                     theme={theme}
@@ -372,6 +373,10 @@ export default function Root(props) {
                 <SearchBar 
                     theme={theme}
                     addRootTab={addRootTab}
+                    search={search}
+                    setSearch={setSearch}
+                    setFocus={setFocus}
+                    results={tabs}
                 />
     
                 <ToolBar 
