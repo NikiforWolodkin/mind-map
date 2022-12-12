@@ -123,8 +123,8 @@ export default function Root(props) {
         setTabs([...tabs, {
             id: idNew,
             text: text,
-            x: xNew > 0 ? ((window.innerWidth - 300) > xNew ? xNew : (window.innerWidth - 300)) : 0,
-            y: yNew > 0 ? ((window.innerHeight - 90) > yNew ? yNew : (window.innerHeight - 90)) : 0,
+            x: xNew > 0 ? (4000 > xNew ? xNew : 4000) : 0,
+            y: yNew > 0 ? (3000 > yNew ? yNew : 3000) : 0,
             focus: true,
             style: {
                 font: "",
@@ -138,8 +138,8 @@ export default function Root(props) {
             xFirst: x,
             yFirst: y,
             idSecond: idNew,
-            xSecond: xNew > 0 ? ((window.innerWidth - 300) > xNew ? xNew : (window.innerWidth - 300)) : 0,
-            ySecond: yNew > 0 ? ((window.innerHeight - 90) > yNew ? yNew : (window.innerHeight - 90)) : 0,
+            xSecond: xNew > 0 ? (4000 > xNew ? xNew : 4000) : 0,
+            ySecond: yNew > 0 ? (3000 > yNew ? yNew : 3000) : 0,
         }]);
         setTabFocus(idNew);
     };
