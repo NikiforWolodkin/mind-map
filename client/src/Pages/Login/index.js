@@ -86,11 +86,6 @@ function Login(props) {
             <div
                 className="text-lg my-1"
             >
-                <HTMLLink>Забыли пароль?</HTMLLink>
-            </div>
-            <div
-                className="text-lg my-1"
-            >
                 Нет аккаунта? <Link to="/signup"><HTMLLink>Создайте аккаунт</HTMLLink></Link>
             </div>
             <div className="h-8"></div>
