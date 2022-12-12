@@ -16,15 +16,12 @@ function SaveBar(props) {
 
     return (
         <div className={parseInt(width) <= 600 ? "absolute flex h-screen items-end" : ""} >
-            <div className="absolute flex items-center justify-evenly w-40 h-14 m-4 shadow-2xl rounded-full text-xl z-50 bg-white">
+            <div className="absolute flex items-center justify-evenly w-28 h-14 m-4 shadow-2xl rounded-full text-xl z-50 bg-white">
                 <div 
                     className={"cursor-pointer hover:" + theme.color}
                     onClick={props.saveMindMap}
                 >
                     <ImExit />
-                </div>
-                <div className={"text-3xl mb-0.5 cursor-pointer hover:" + theme.color}>
-                    <TiArrowBack />
                 </div>
                 <div 
                     className={"cursor-pointer hover:" + theme.color}
