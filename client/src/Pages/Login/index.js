@@ -42,6 +42,8 @@ function Login(props) {
             setError(null);
             props.setGlobalToken(result.token);
             props.setGlobalLoggedIn();
+            localStorage.setItem("token", result.token);
+            localStorage.setItem("loggedIn", true);
         }
         catch (e) {
             console.log(e);

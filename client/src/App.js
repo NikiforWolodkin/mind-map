@@ -9,10 +9,10 @@ import MindMap from './mind-map';
 
 function App() {
   const [registered, setRegistered] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [token, setToken] = useState("");
-  const [mindMapId, setMindMapId] = useState("");
-
+  const [loggedIn, setLoggedIn] = useState(localStorage.getItem("loggedIn") || false);
+  const [token, setToken] = useState(localStorage.getItem("token") || "");
+  const [mindMapId, setMindMapId] = useState(localStorage.getItem("mindMapId") || "");
+  
   return (
     <Routes>
       <Route path="*" element={<Navigate to="/error" />} />

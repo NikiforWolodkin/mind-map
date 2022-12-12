@@ -4,6 +4,9 @@ function SavingSpinner(props) {
     return (
         <div
             className="flex items-center w-80 h-fit mt-2 px-2 py-2 rounded-md border-4 bg-white border-white shadow-lg text-lg"
+            style={{
+                zIndex: "999"
+            }}
         >
             <div className="text-2xl mr-1">
                 <Oval

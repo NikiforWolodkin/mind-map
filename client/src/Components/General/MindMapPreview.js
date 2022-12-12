@@ -87,6 +87,7 @@ function MindMapPreview(props) {
             onClick={ () => {
                 if (!isTyping) {
                     props.setMindMapId(props.mindMap._id);
+                    localStorage.setItem("mindMapId", props.mindMap._id);
                     navigate("/mindmap");
                 }
             }}

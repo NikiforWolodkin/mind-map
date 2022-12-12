@@ -274,12 +274,12 @@ export default function Root(props) {
                 });
         
                 if (!response.ok) {
-                    props.setGlobalToken();
-                    props.setGlobalLoggedIn();
                     throw new Error(`GET error, status: ${response.status}`);
                 }
+                
     
                 const result = await response.json();
+                console.log(response, result)
                 setMindMap(result.mindMap)
                 setTabs(result.mindMap.tabs);
                 setLines(result.mindMap.lines);
@@ -335,7 +335,7 @@ export default function Root(props) {
     return (
         <div>
             {error !== null ? <div 
-                className="absolute flex w-full h-0 mt-4 justify-evenly cursor-pointer z-10"
+                className="absolute flex w-full h-0 mt-4 justify-evenly cursor-pointer"
                 onClick={ () => setError(null) }
             >
                 <BarError text={error} />

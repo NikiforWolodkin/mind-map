@@ -32,6 +32,8 @@ function Account(props) {
     const logOut = () => {
         props.setGlobalToken();
         props.setGlobalLoggedIn();
+        localStorage.setItem("token", "");
+        localStorage.setItem("loggedIn", false);
         navigate("/login");
     };
 
@@ -190,6 +192,7 @@ function Account(props) {
                 if (!response.ok) {
                     props.setGlobalToken();
                     props.setGlobalLoggedIn();
+                    localStorage.clear();
                     throw new Error(`GET error, status: ${response.status}`);
                 }
     

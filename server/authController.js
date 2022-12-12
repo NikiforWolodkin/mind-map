@@ -22,7 +22,6 @@ class authController {
             if (candidate) {
                 return res.status(400).json({message: "Email is already taken", type: 1});
             }
-            console.log(password)
             const hashPassword = bcrypt.hashSync(password, 4);
             const user = new User({email, password: hashPassword, name: email.split("@")[0]});
             await user.save();
@@ -71,11 +70,12 @@ class authController {
     async getMindMap(req, res) {
         try {
             const mindMap = await MindMap.findOne({_id: req.body._id});
-            mindMap.lastAccessTime = new Date();
-            mindMap.save();
             if (!mindMap) {
                 return res.status(400).json({message: "Mind map not found", type: 1});
             }
+            mindMap.lastAccessTime = new Date();
+            mindMap.save();
+            
             return res.json({message: "Successfully fetched", mindMap: mindMap});
         }
         catch (e) {

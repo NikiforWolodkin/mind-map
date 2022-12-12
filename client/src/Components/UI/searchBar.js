@@ -17,7 +17,6 @@ function SearchBar(props) {
 
         return name.toUpperCase().includes(props.search.toUpperCase());
     }
-    console.log(width)
 
     return (
         <>
