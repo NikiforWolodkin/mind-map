@@ -1,5 +1,5 @@
 const User = require('./models/User');
-const MindMap = require('./models/MindMap');
+const MindMap = require('./models/MM');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');

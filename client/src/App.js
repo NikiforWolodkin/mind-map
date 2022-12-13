@@ -5,7 +5,7 @@ import Error from './Pages/Error/index';
 import Login from './Pages/Login/index';
 import Signup from './Pages/Signup/index';
 import Account from './Pages/Account/index';
-import MindMap from './mind-map';
+import MindMap from './Pages/MindMap/index';
 
 function App() {
   const [registered, setRegistered] = useState(false);

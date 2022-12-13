@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 import { Navigate, useNavigate } from 'react-router-dom';
 import { animated } from "react-spring";
-import LoadingSpinner from './Components/General/LoadingSpinner';
-import SavingSpinner from './Components/General/savingSpinner';
-import BarError from './Components/Forms/barError';
-import Line from './Components/UI/line';
-import Tab from './Components/UI/tab';
-import ToolBar from "./Components/UI/toolBar";
-import SaveBar from "./Components/UI/saveBar";
-import SearchBar from "./Components/UI/searchBar";
+import LoadingSpinner from '../../Components/General/LoadingSpinner';
+import SavingSpinner from '../../Components/General/SavingBar';
+import BarError from '../../Components/Forms/barError';
+import Line from '../../Components/UI/line';
+import Tab from '../../Components/UI/tab';
+import ToolBar from "../../Components/UI/toolBar";
+import SaveBar from "../../Components/UI/saveBar";
+import SearchBar from "../../Components/UI/searchBar";
 
 export default function Root(props) {
     const navigate = useNavigate();

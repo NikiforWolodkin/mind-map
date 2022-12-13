@@ -79,14 +79,15 @@ const Tab = React.memo(function Tab(props) {
                 {props.type !== "connector" &&
                     <div className={"flex items-center w-60 p-1 rounded shadow-2xl "
                         + (props.style.background === "theme" ? theme.background : props.style.background) + " "
-                        + (props.type === "textarea" ? "h-48 " : "h-10 ")
+                        + (props.type === "textarea" ? "h-48" : "h-10") + " "
                         + (props.tabFocus === props.id ? "outline outline-offset-1 outline-3 outline-blue-600" : "")
                     }>
                         {props.type === "input" &&
                             <input
                                 className={"w-full h-full text-xl text-center rounded-sm outline-none "
                                     + props.style.fill + " "
-                                    + props.style.font
+                                    + props.style.font + " "
+                                    + (props.style.background === "bg-white" ? "text-black" : "")
                                 }
                                 type="text"
                                 value={props.text}
@@ -99,7 +100,8 @@ const Tab = React.memo(function Tab(props) {
                             <textarea
                                 className={"w-full h-full text-xl text-center rounded-sm outline-none resize-none "
                                     + props.style.fill + " "
-                                    + props.style.font
+                                    + props.style.font + " "
+                                    + (props.style.background === "bg-white" ? "text-black" : "")
                                 }
                                 value={props.text}
                                 ref={inputRef}

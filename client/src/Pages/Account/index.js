@@ -7,7 +7,7 @@ import { FaRegTrashAlt } from 'react-icons/fa';
 import { MdRefresh } from 'react-icons/md';
 import { CgClose } from 'react-icons/cg';
 import LoadingSpinner from '../../Components/General/LoadingSpinner';
-import SavingSpinner from '../../Components/General/savingSpinner';
+import SavingSpinner from '../../Components/General/SavingBar';
 import BarError from '../../Components/Forms/barError';
 import Search from '../../Components/General/Search';
 import Button from '../../Components/General/Button';
@@ -54,7 +54,16 @@ function Account(props) {
 
             const result = await response.json();
             setUser(result.user);
-            setMindMaps(result.mindMaps);
+            setMindMaps(result.mindMaps.sort((a, b) => {
+                if (new Date(a.lastAccessTime) > new Date(b.lastAccessTime)) {
+                    return -1;
+                }
+                if (new Date(a.lastAccessTime) < new Date(b.lastAccessTime)) {
+                    return 1;
+                }
+
+                return 0;
+            }));
         }
         catch (e) {
             console.log(e);
@@ -199,10 +208,10 @@ function Account(props) {
                 const result = await response.json();
                 setUser(result.user);
                 setMindMaps(result.mindMaps.sort((a, b) => {
-                    if (a.lastAccessTime > b.lastAccessTime) {
+                    if (new Date(a.lastAccessTime) > new Date(b.lastAccessTime)) {
                         return -1;
                     }
-                    if (a.lastAccessTime < b.lastAccessTime) {
+                    if (new Date(a.lastAccessTime) < new Date(b.lastAccessTime)) {
                         return 1;
                     }
 
