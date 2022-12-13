@@ -22,17 +22,17 @@ function Settings(props) {
                     <BiCheckbox />
                 </div>
             </div>
-            <div className="flex flex-wrap w-full h-fit mt-2 mr-2">
+            <div className="flex w-full h-fit mt-2 mr-2">
                 <div 
-                    className={"grow flex justify-center items-center py-1 ml-2 rounded shadow-2xl cursor-pointer"}
+                    className={"grow basis-6/12 flex justify-center items-center py-1 ml-2 rounded shadow-2xl cursor-pointer"}
                     onClick={ () => props.changeType(props.tabFocus, "textarea")  }
                 >
                     <MdCheckBoxOutlineBlank />
                 </div>
                 <div 
-                    className={"grow text-white"}
+                    className={"grow basis-6/12"}
                 >
-                    Aa
+                    
                 </div>
             </div>
         </div>
