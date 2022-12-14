@@ -1,8 +1,13 @@
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 const { secretKey } = require('../config');
 
 module.exports = function(req, res, next) {
     if (req.method === "OPTIONS") {
+        next();
+    }
+
+    if (mongoose.connection.readyState !== 1) {
         next();
     }
 

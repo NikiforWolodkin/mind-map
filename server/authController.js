@@ -1,5 +1,6 @@
 const User = require('./models/User');
 const MindMap = require('./models/MM');
+const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
@@ -13,6 +14,10 @@ const generateAccessToken = (id, email) => {
 class authController {
     async registration(req, res) {
         try {
+            if (mongoose.connection.readyState !== 1) {
+                res.status(400).json({message: "Database unavailable", type: 0});
+            }
+
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
                 res.status(400).json({message: "Incorrect data", type: 0});
@@ -35,6 +40,10 @@ class authController {
 
     async login(req, res) {
         try {
+            if (mongoose.connection.readyState !== 1) {
+                return res.json({message: "Demo log in", token: "Demo"});
+            }
+
             const {email, password} = req.body;
             const user = await User.findOne({email});
             if (!user) {
@@ -55,6 +64,19 @@ class authController {
 
     async getUser(req, res) {
         try {
+            if (mongoose.connection.readyState !== 1) {
+                return res.json({message: "Demo fetched", user: {email: "Demo", name: "Демо-режим"}, mindMaps: [{
+                    userId: "Demo",
+                    name: "Демо-карта",
+                    lastAccessTime: new Date(),
+                    favorited: false,
+                    markedForDeletion: false,
+                    tabs: [],
+                    lines: [],
+                    theme: "gradBlue",
+                }]});
+            }
+
             const user = await User.findOne({email: req.user.email});
             if (!user) {
                 return res.status(400).json({message: "User not found", type: 1});
@@ -69,6 +91,19 @@ class authController {
 
     async getMindMap(req, res) {
         try {
+            if (mongoose.connection.readyState !== 1) {
+                return res.json({message: "Demo fetched", mindMap: {
+                    userId: "Demo",
+                    name: "Демо-карта",
+                    lastAccessTime: new Date(),
+                    favorited: false,
+                    markedForDeletion: false,
+                    tabs: [],
+                    lines: [],
+                    theme: "gradBlue",
+                }});
+            }
+
             const mindMap = await MindMap.findOne({_id: req.body._id});
             if (!mindMap) {
                 return res.status(400).json({message: "Mind map not found", type: 1});

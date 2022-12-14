@@ -8,12 +8,14 @@ app.use("/api/auth", authRouter);
 
 const startServer = async () => {
     try {
-        await mongoose.connect("mongodb://localhost:27017/mindmap");
-        app.listen(5000, () => {console.log("Server started on port 5000")});
+        await mongoose.connect("mongodb://localhost:27017/mindmap", {serverSelectionTimeoutMS : 2000});
     }
     catch (e) {
         console.log(e);
     }
+
+    console.log(mongoose.connection.readyState);
+    app.listen(5000, () => {console.log("Server started on port 5000")});
 };
 
 startServer();

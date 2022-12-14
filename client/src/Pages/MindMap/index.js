@@ -244,6 +244,10 @@ export default function Root(props) {
     const saveMindMap = async () => {
         setIsSaving(true);
 
+        if (mindMap.userId === "Demo") {
+            navigate("/account");
+        }
+
         update(prevUpdater => !prevUpdater);
 
         const mindMapUpdated = mindMap;
@@ -311,7 +315,8 @@ export default function Root(props) {
             }
         }
 
-        if (timer >= 10) {
+        if (timer >= 10 && mindMap.userId !== "Demo") {
+            console.log(mindMap.userId)
             save();
             setTimer((prevTimer) => 0);
         }
