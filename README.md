@@ -18,7 +18,7 @@ npm install
 npm run dev
 ```
 
-Note that **Mind-Map** requires a *MongoDB Server* running on local machine for all the features to be usable. Without it the app will still work in demo mode however you won't be able to create an account or save anything.
+Note that **Mind-Map** requires a *MongoDB Server* running on your machine for all the features to be usable. Without it the app will still work in demo mode however you won't be able to create an account or save anything.
 
 ## Usage
 
