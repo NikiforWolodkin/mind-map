@@ -1,6 +1,6 @@
 # Mind-Map
 
-**Mind-Map** is a web application for creating mind maps similar to XMind or MindMeister. Mind maps are a way of organizing thoughts and concepts into diagrams and **Mind-Map** seeks to improve the user's productivity by providing them a simple and powerful way to create such diagrams. It provides flexible functionality to create and customize mind maps and schemas of varying degrees of complexicity. The app can support multiple users who are using different accounts independently of each other. It provides the ability to save, delete and highlight multuple mind maps for each user.
+**Mind-Map** is a web application for creating mind maps similar to XMind or MindMeister. Mind maps are a way of organizing thoughts and concepts into diagrams and **Mind-Map** seeks to improve the user's productivity by providing them a simple and powerful way to create such diagrams. It provides flexible functionality to create and customize mind maps and schemas of varying degrees of complexity. The app can support multiple users who are using different accounts independently of each other. It provides the ability to save, delete and highlight multuple mind maps for each user.
 
 ## Installation
 
